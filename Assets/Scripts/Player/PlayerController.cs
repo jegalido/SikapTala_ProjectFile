@@ -5,9 +5,15 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    [Header("Movement")]
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float jumpForce;
 
+
+    [Header("Collision detection")]
+    private bool isGrounded;
     public float xInput; 
+    
 
 
     private void Awake()
@@ -24,7 +30,14 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         xInput = Input.GetAxisRaw("Horizontal");
+
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
         HandleMovemnent();
+
     }
 
 
