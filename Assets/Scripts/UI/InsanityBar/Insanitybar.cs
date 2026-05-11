@@ -13,27 +13,32 @@ public class InsanityBar : MonoBehaviour
     // -- Public / Inspector fields --------------------------------------------
 
     [Header("Insanity Drain")]
+    [Tooltip("How many minutes until the bar fully drains from 100% to 0%")]
     public float drainDurationInMinutes = 2f;
 
     [Header("Restore On Collect")]
+    [Tooltip("Percentage (0-100) of the bar restored when picking up a collectible")]
     public float restorePercent = 25f;
 
     [Header("UI References")]
+    [Tooltip("The UI Slider that visually represents the insanity bar")]
     public Slider insanitySlider;
 
+    [Tooltip("The GameObject shown when insanity reaches 0 (checkpoint prompt sprite)")]
     public GameObject checkpointPrompt;
 
     [Header("Player Reference")]
- 
+    [Tooltip("Drag your Player GameObject here")]
     public Transform player;
 
+    // -- Private state --------------------------------------------------------
 
     private float currentInsanity;
     private bool isDepleted;
     private Vector3 lastCheckpointPosition;
     private bool hasCheckpoint;
 
- 
+    // -- Unity lifecycle ------------------------------------------------------
 
     private void Start()
     {
@@ -61,7 +66,7 @@ public class InsanityBar : MonoBehaviour
         CheckDepletion();
     }
 
-    // -- Drain logic 
+    // -- Drain logic ----------------------------------------------------------
 
     private void DrainInsanity()
     {
@@ -70,7 +75,12 @@ public class InsanityBar : MonoBehaviour
         currentInsanity = Mathf.Clamp(currentInsanity, 0f, 100f);
     }
 
-   
+    // -- Checkpoint registration (called by CheckpointTrigger.cs) -------------
+
+    /// <summary>
+    /// Called by a CheckpointTrigger when the player enters it.
+    /// Saves the checkpoint world position.
+    /// </summary>
     public void RegisterCheckpoint(Vector3 position)
     {
         lastCheckpointPosition = position;
@@ -110,7 +120,13 @@ public class InsanityBar : MonoBehaviour
     {
         Debug.Log("InsanityBar: Depleted!");
 
-        
+        // Show the prompt sprite briefly
+        if (checkpointPrompt != null)
+            checkpointPrompt.SetActive(true);
+        else
+            Debug.LogWarning("InsanityBar: checkpointPrompt is NOT assigned in the Inspector!");
+
+        // Respawn player at last checkpoint
         if (hasCheckpoint && player != null)
         {
             player.position = lastCheckpointPosition;
@@ -121,20 +137,15 @@ public class InsanityBar : MonoBehaviour
             Debug.LogWarning("InsanityBar: No checkpoint registered yet or player not assigned!");
         }
 
-
-        if (checkpointPrompt != null)
-            checkpointPrompt.SetActive(true);
-        else
-            Debug.LogWarning("InsanityBar: checkpointPrompt is NOT assigned in the Inspector!");
-
-        // Time.timeScale = 0f; // uncomment to freeze game on depletion
+        // Reset bar back to full and hide prompt
+        ResetInsanity();
     }
 
-    
+    // -- Public utility -------------------------------------------------------
 
-   
+    /// <summary>
     /// Call this to reset insanity and hide the prompt after respawn.
-   
+    /// </summary>
     public void ResetInsanity()
     {
         currentInsanity = 100f;
