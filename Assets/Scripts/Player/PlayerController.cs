@@ -11,7 +11,12 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Collision detection")]
+    [SerializeField] private float groundCheck;
+    [SerializeField] private LayerMask thisIsGround;
     private bool isGrounded;
+
+
+    
     public float xInput; 
     
 
@@ -31,8 +36,10 @@ public class PlayerController : MonoBehaviour
     {
         xInput = Input.GetAxisRaw("Horizontal");
 
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheck, thisIsGround);
 
-        if(Input.GetKeyDown(KeyCode.Space))
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
@@ -45,5 +52,11 @@ public class PlayerController : MonoBehaviour
     private void HandleMovemnent()
     {
         rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y - groundCheck) );
     }
 }

@@ -526,7 +526,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 3
+  m_GravityScale: 4.5
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -588,7 +588,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   moveSpeed: 6.03
-  jumpForce: 12
+  jumpForce: 14
+  groundCheck: 1.12
+  thisIsGround:
+    serializedVersion: 2
+    m_Bits: 8
   xInput: 0
 --- !u!1 &2013155038
 GameObject:
