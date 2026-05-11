@@ -1480,7 +1480,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.32, y: -0.67, z: -10}
+  m_LocalPosition: {x: 10.32, y: 3.41, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1739,7 +1739,7 @@ Transform:
   m_GameObject: {fileID: 698021236}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.32, y: -0.67, z: -10}
+  m_LocalPosition: {x: 10.32, y: 3.41, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1772,7 +1772,7 @@ Transform:
   m_GameObject: {fileID: 760114710}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5451,7 +5451,7 @@ Transform:
   m_GameObject: {fileID: 1922908676}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.32, y: -0.67, z: 0}
+  m_LocalPosition: {x: 10.32, y: 3.41, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5481,7 +5481,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -5536,11 +5536,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   moveSpeed: 6.03
   jumpForce: 14
-  groundCheck: 1.12
+  groundCheck: 1.24
   thisIsGround:
     serializedVersion: 2
     m_Bits: 8
   xInput: 0
+  isRunning: 0
 --- !u!1 &1936800597
 GameObject:
   m_ObjectHideFlags: 0
