@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    private Animator anim;
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
@@ -16,19 +18,20 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
 
-    
-    public float xInput; 
-    
+
+    public float xInput;
+    public bool isRunning;
 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -38,12 +41,25 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheck, thisIsGround);
 
+        
+
+        if (rb.linearVelocity.x != 0)
+        {
+            isRunning = true;
+        }
+        else
+        {
+            isRunning = false;
+        }
+
+        anim.SetBool("isRunning", isRunning);
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
         HandleMovemnent();
+
 
     }
 
@@ -57,6 +73,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y - groundCheck) );
+        Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y - groundCheck));
     }
 }
