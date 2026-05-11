@@ -707,6 +707,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7461a8819553e7c4dbb5fc1f2b21fcd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuManager
+  mainMenuPanel: {fileID: 816888465}
+  settingsPanel: {fileID: 1845143584}
+  creditsPanel: {fileID: 9497669}
 --- !u!1 &638274517
 GameObject:
   m_ObjectHideFlags: 0
