@@ -54,7 +54,10 @@ public class PlayerController : MonoBehaviour
         {
             HandleJump();
         }
+        
     }
+
+   
 
     private void HandleJump()
     {
