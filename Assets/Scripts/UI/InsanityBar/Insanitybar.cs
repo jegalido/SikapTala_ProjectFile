@@ -1,35 +1,45 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
+/// <summary>
+/// Insanity Bar System with Multi-Checkpoint Support
+/// - Drains over time (rate set in minutes)
+/// - Refills when collecting objects (percent-based)
+/// - Shows a checkpoint prompt when bar hits 0
+/// - Respawns player at the last registered checkpoint
+/// </summary>
 public class InsanityBar : MonoBehaviour
 {
- 
+    // -- Public / Inspector fields --------------------------------------------
 
     [Header("Insanity Drain")]
-    [Tooltip("How many minutes until the bar fully drains from 100% to 0%")]
     public float drainDurationInMinutes = 2f;
 
     [Header("Restore On Collect")]
-    [Tooltip("Percentage (0-100) of the bar restored when picking up a collectible")]
     public float restorePercent = 25f;
 
     [Header("UI References")]
-    [Tooltip("The UI Slider that visually represents the insanity bar")]
     public Slider insanitySlider;
 
-    [Tooltip("The GameObject shown when insanity reaches 0 (checkpoint prompt sprite)")]
     public GameObject checkpointPrompt;
 
-    private float currentInsanity;   // 0.0 - 100.0
+    [Header("Player Reference")]
+ 
+    public Transform player;
+
+
+    private float currentInsanity;
     private bool isDepleted;
+    private Vector3 lastCheckpointPosition;
+    private bool hasCheckpoint;
 
-
+ 
 
     private void Start()
     {
         currentInsanity = 100f;
         isDepleted = false;
+        hasCheckpoint = false;
 
         if (insanitySlider != null)
         {
@@ -51,15 +61,24 @@ public class InsanityBar : MonoBehaviour
         CheckDepletion();
     }
 
+    // -- Drain logic 
 
     private void DrainInsanity()
     {
-        // Convert minutes to seconds, then to per-frame drain
         float drainPerSecond = 100f / (drainDurationInMinutes * 60f);
         currentInsanity -= drainPerSecond * Time.deltaTime;
         currentInsanity = Mathf.Clamp(currentInsanity, 0f, 100f);
     }
 
+   
+    public void RegisterCheckpoint(Vector3 position)
+    {
+        lastCheckpointPosition = position;
+        hasCheckpoint = true;
+        Debug.Log("InsanityBar: Checkpoint registered at " + position);
+    }
+
+    // -- Restore logic (called by collectibles) --------------------------------
 
     public void RestoreInsanity(float percent)
     {
@@ -70,9 +89,7 @@ public class InsanityBar : MonoBehaviour
         UpdateSliderUI();
     }
 
-    
-    // UI helpers
- 
+    // -- UI helpers -----------------------------------------------------------
 
     private void UpdateSliderUI()
     {
@@ -91,20 +108,33 @@ public class InsanityBar : MonoBehaviour
 
     private void OnInsanityDepleted()
     {
+        Debug.Log("InsanityBar: Depleted!");
+
+        
+        if (hasCheckpoint && player != null)
+        {
+            player.position = lastCheckpointPosition;
+            Debug.Log("InsanityBar: Player respawned at " + lastCheckpointPosition);
+        }
+        else
+        {
+            Debug.LogWarning("InsanityBar: No checkpoint registered yet or player not assigned!");
+        }
+
+
         if (checkpointPrompt != null)
             checkpointPrompt.SetActive(true);
+        else
+            Debug.LogWarning("InsanityBar: checkpointPrompt is NOT assigned in the Inspector!");
 
-        // Optionally pause game time while prompt is shown
-        // Time.timeScale = 0f;
+        // Time.timeScale = 0f; // uncomment to freeze game on depletion
     }
 
-    // -----------------------------------------------------------------------
-    // Public utility
-    // -----------------------------------------------------------------------
+    
 
    
-    /// Call this when the player returns to checkpoint to reset the bar.
-  
+    /// Call this to reset insanity and hide the prompt after respawn.
+   
     public void ResetInsanity()
     {
         currentInsanity = 100f;
@@ -115,11 +145,8 @@ public class InsanityBar : MonoBehaviour
         if (checkpointPrompt != null)
             checkpointPrompt.SetActive(false);
 
-        // Time.timeScale = 1f; // uncomment if you paused above
+        // Time.timeScale = 1f;
     }
 
-    /// <summary>
-    /// Returns current insanity value (0-100) for external reads.
-    /// </summary>
     public float GetInsanity() => currentInsanity;
 }

@@ -12,7 +12,7 @@ public class InsanityCollectible : MonoBehaviour
 
     private void Start()
     {
-        // Auto-find if not assigned in Inspector
+       
         if (insanityBar == null)
             insanityBar = FindFirstObjectByType<InsanityBar>();
     }
