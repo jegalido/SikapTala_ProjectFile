@@ -2,23 +2,10 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-/// <summary>
-/// Insanity Vision Effect
-/// - Hold Shift: screen goes dull gray + chromatic aberration on edges
-/// - Shift also reveals hidden GameObjects (e.g. hidden clues, paths, secrets)
-/// - Release Shift: everything returns to normal smoothly
-///
-/// Setup:
-///   1. Install URP (Universal Render Pipeline) in Package Manager
-///   2. Add a Volume component to your camera or a new GameObject
-///   3. Add Vignette, Color Adjustments, and Chromatic Aberration overrides to the Volume
-///   4. Assign the Volume to this script
-///   5. Add hidden GameObjects to the hiddenObjects array
-///   6. Attach this script to your Camera or a Manager GameObject
-/// </summary>
+
 public class InsanityVisionEffect : MonoBehaviour
 {
-    // -- Public / Inspector fields --------------------------------------------
+
 
     [Header("Post Processing Volume")]
     [Tooltip("Assign the Global Volume that has your post processing overrides")]
@@ -43,7 +30,7 @@ public class InsanityVisionEffect : MonoBehaviour
     [Tooltip("GameObjects that become visible only when Shift is held")]
     public GameObject[] hiddenObjects;
 
-    // -- Private state --------------------------------------------------------
+   
 
     private ColorAdjustments colorAdjustments;
     private ChromaticAberration chromaticAberration;
@@ -52,13 +39,13 @@ public class InsanityVisionEffect : MonoBehaviour
     private float currentBlend = 0f;      // 0 = normal, 1 = full effect
     private bool effectActive = false;
 
-    // Default values (captured on Start)
+   
     private float defaultSaturation;
     private float defaultExposure;
     private float defaultChromaticIntensity;
     private float defaultVignetteIntensity;
 
-    // -- Unity lifecycle ------------------------------------------------------
+
 
     private void Start()
     {
@@ -104,7 +91,7 @@ public class InsanityVisionEffect : MonoBehaviour
         SetHiddenObjects(currentBlend > 0.5f);
     }
 
-    // -- Effect application ---------------------------------------------------
+    // -- Effect application 
 
     private void ApplyEffects(float blend)
     {
@@ -131,7 +118,7 @@ public class InsanityVisionEffect : MonoBehaviour
         }
     }
 
-    // -- Hidden objects -------------------------------------------------------
+    // -- Hidden objects 
 
     private bool lastHiddenState = false;
 
@@ -149,7 +136,7 @@ public class InsanityVisionEffect : MonoBehaviour
         }
     }
 
-    // -- Editor helper --------------------------------------------------------
+    // -- Editor helper 
 
     private void OnValidate()
     {
