@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueLine
   speakerName: Mother
   dialogueText: Oh, you're home!
-  emotion: 0
+  emotion: 3
