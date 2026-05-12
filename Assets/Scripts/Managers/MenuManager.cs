@@ -6,6 +6,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject creditsPanel;
+    [SerializeField] private GameObject continuePanel;
     
 
     public void OnPlayClicked()
@@ -44,5 +45,11 @@ public class MenuManager : MonoBehaviour
         }
 
         parent.gameObject.SetActive(true);
+    }
+
+    public void OnContinueClicked()
+    {
+        mainMenuPanel.SetActive(false);
+        continuePanel.SetActive(true);
     }
 }
