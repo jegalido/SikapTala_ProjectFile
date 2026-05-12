@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class IntroManager : MonoBehaviour
 {
-    float cs = 8.0f;
+    float cs = 9.0f;
     void Update()
     {
         cs -= Time.deltaTime;
