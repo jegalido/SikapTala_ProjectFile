@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: febd590c3f604894983c9fa914aa5206
+guid: a6835e697fe63c44ab098ce20bd5239d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8393084210985608824
-    second: tile jump_0
+      213: 4664728692798591758
+    second: grass pot2 jump_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tile jump_0
+      name: grass pot2 jump_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 18
-        height: 5
+        width: 17
+        height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 889534ae066c58b80800000000000000
-      internalID: -8393084210985608824
+      spriteID: e0315d308027cb040800000000000000
+      internalID: 4664728692798591758
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      tile jump_0: -8393084210985608824
+      grass pot2 jump_0: 4664728692798591758
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
