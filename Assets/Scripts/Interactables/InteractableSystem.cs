@@ -15,12 +15,14 @@ public class InteractableSystem : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        Debug.Log("InteractableSystem Awake");
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
+            Debug.Log("Pressed F");
             HandleF();
         }
 
