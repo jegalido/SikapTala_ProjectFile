@@ -65,16 +65,27 @@ public class DialogueManager : MonoBehaviour
     private void ShowLine()
     {
         DialogueLine line = currentDialogue.lines[currentLineIndex];
-
         speakerNameText.text = line.speakerName;
 
+        // DEBUG
+        Debug.Log("Speaker: " + line.speakerName);
+        Debug.Log("Emotion: " + line.emotion);
+
         SpeakerAnimationData data = FindAnimationData(line.speakerName);
+
+        // DEBUG
+        Debug.Log("AnimationData found: " + (data != null ? data.speakerName : "NULL"));
 
         if (animCoroutine != null) StopCoroutine(animCoroutine);
 
         if (data != null)
         {
             SpeakerAnimationData.EmotionEntry entry = data.GetEntry(line.emotion);
+
+            // DEBUG
+            Debug.Log("Entry found: " + (entry != null ? entry.emotion.ToString() : "NULL"));
+            Debug.Log("Frame count: " + (entry != null ? entry.frames.Length.ToString() : "NULL"));
+
             if (entry != null && entry.frames.Length > 0)
                 animCoroutine = StartCoroutine(AnimateIcon(entry));
         }

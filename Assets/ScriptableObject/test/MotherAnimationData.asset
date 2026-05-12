@@ -22,3 +22,14 @@ MonoBehaviour:
     - {fileID: 7034235146082101338, guid: 4b97802aba2ed7a4697344ce4e55ea30, type: 3}
     - {fileID: 6827562197408563410, guid: 6adc33743b677434890b519a923cdd38, type: 3}
     frameRate: 8
+  - emotion: 3
+    frames:
+    - {fileID: 2495656374363502052, guid: bbd6a9aa39702144abbe443b757c930b, type: 3}
+    - {fileID: -4880477828329391883, guid: b2df027c09a857045aa951dce69c49d0, type: 3}
+    - {fileID: 5050104938245720674, guid: d0d4f69ae7fb8114aa9107d545dfae78, type: 3}
+    - {fileID: -2111269981337978648, guid: 5f5e142ece10ca94fad83701bf07376e, type: 3}
+    - {fileID: 1927194652506133928, guid: dc3a4e611615c8846a349bbfb87ac031, type: 3}
+    - {fileID: -208859165471903185, guid: 56593eb5f87a17e47964f41b696ae56b, type: 3}
+    - {fileID: 7696389704231702377, guid: 2568cf574469a964e8f5afa42e8368b1, type: 3}
+    - {fileID: 7348343435644953512, guid: 8bc04be1ff892c84da87bb8dd2a1d4bf, type: 3}
+    frameRate: 8

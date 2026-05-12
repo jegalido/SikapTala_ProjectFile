@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueLine
   speakerName: Mother
   dialogueText: I made dinner for you.
-  emotion: 0
+  emotion: 3

@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueObject
   lines:
   - {fileID: 11400000, guid: ed35538d80daf8f4bbf362253e805df0, type: 2}
+  - {fileID: 11400000, guid: c3d0f11c7de276144b659bea74c6e752, type: 2}
   - {fileID: 11400000, guid: 601809d9bf5f6464cad7dfc6e9e2fe47, type: 2}
+  - {fileID: 11400000, guid: 2d03065c9ba9d9d479a07a39d1c74fb2, type: 2}

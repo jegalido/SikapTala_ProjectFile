@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e09eb24f6183a47bd6acdfeacfb5c9, type: 3}
+  m_Name: New Speaker Animation Data
+  m_EditorClassIdentifier: Assembly-CSharp::SpeakerAnimationData
+  speakerName: 
+  emotionEntries:
+  - emotion: 0
+    frames:
+    - {fileID: 509185479731017693, guid: 27213b3db521e164ca75f28fb78ae3d9, type: 3}
+    - {fileID: 7016799958136603730, guid: 19043905f29c344468426b2ed8c5d1db, type: 3}
+    frameRate: 0
