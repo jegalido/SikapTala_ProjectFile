@@ -15,14 +15,12 @@ public class InteractableSystem : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        Debug.Log("InteractableSystem Awake");
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Debug.Log("Pressed F");
             HandleF();
         }
 
@@ -120,4 +118,16 @@ public class InteractableSystem : MonoBehaviour
 
         promptUI.SetActive(false);
     }
+    void OnEnable()
+{
+    Debug.Log("InteractableSystem ENABLED");
+}
+
+void OnDisable()
+{
+    Debug.LogError(
+        "DISABLED BY: " +
+        (transform.root ? transform.root.name : "NO ROOT")
+    );
+}
 }
