@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: Player  Line 1
   m_EditorClassIdentifier: Assembly-CSharp::DialogeLine
   speakerName: Player
-  dialogueText: 
+  dialogueText: 'Ano ba ang ginagawa mo '
+  speakerIcon: {fileID: 0}
+  animationStateName: Talking

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e09eb24f6183a47bd6acdfeacfb5c9, type: 3}
+  m_Name: sampleDialogueAnim
+  m_EditorClassIdentifier: Assembly-CSharp::SpeakerAnimationData
+  speakerName: Mother
+  emotionEntries:
+  - emotion: 1
+    frames:
+    - {fileID: -5208269479597883743, guid: 41664aac39fc01449a3744500ae57ad7, type: 3}
+    - {fileID: 6263133821060428273, guid: d254e02da2ac968489e383995f52a19e, type: 3}
+    - {fileID: 0}
+    frameRate: 46
+  - emotion: 0
+    frames: []
+    frameRate: 0
