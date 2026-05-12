@@ -13,7 +13,7 @@ public class InventorySystem : MonoBehaviour
     public List<InventorySlot> backpackSlots = new();
 
     public int selectedHotbarIndex = 0;
-
+    //test
     public Action OnInventoryChanged;
     public Action<int> OnHotbarSelectionChanged;
 
