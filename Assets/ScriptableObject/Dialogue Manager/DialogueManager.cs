@@ -26,7 +26,7 @@ public class DialogueManager : MonoBehaviour
     private bool isTyping;
     private Coroutine typingCoroutine;
 
-  
+
 
     private void Awake()
     {
@@ -38,7 +38,11 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        // Auto-grab Animators from the icon GameObjects
+        // Make sure icons are active so Animator can initialize
+        motherIcon.SetActive(true);
+        playerIcon.SetActive(true);
+
+        // Grab animators while they are active
         motherAnimator = motherIcon.GetComponent<Animator>();
         playerAnimator = playerIcon.GetComponent<Animator>();
 
@@ -46,6 +50,10 @@ public class DialogueManager : MonoBehaviour
             Debug.LogWarning("DialogueManager: No Animator found on MotherIcon.");
         if (playerAnimator == null)
             Debug.LogWarning("DialogueManager: No Animator found on PlayerIcon.");
+
+        // Now hide them until dialogue starts
+        motherIcon.SetActive(false);
+        playerIcon.SetActive(false);
     }
 
 
