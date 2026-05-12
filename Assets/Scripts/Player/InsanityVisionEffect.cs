@@ -2,10 +2,9 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-
 public class InsanityVisionEffect : MonoBehaviour
 {
-
+    // 
 
     [Header("Post Processing Volume")]
     [Tooltip("Assign the Global Volume that has your post processing overrides")]
@@ -26,27 +25,30 @@ public class InsanityVisionEffect : MonoBehaviour
     [Tooltip("Intensity of chromatic aberration (0-1). 0.5 is strong but not nauseating")]
     public float targetChromaticIntensity = 0.5f;
 
-    [Header("Hidden Objects")]
-    [Tooltip("GameObjects that become visible only when Shift is held")]
-    public GameObject[] hiddenObjects;
+    [Header("Object Visibility On Shift")]
+    [Tooltip("GameObjects that are HIDDEN normally and become VISIBLE when Shift is held")]
+    public GameObject[] revealOnShift;
 
-   
+    [Tooltip("GameObjects that are VISIBLE normally and become HIDDEN when Shift is held")]
+    public GameObject[] hideOnShift;
+
+    // 
 
     private ColorAdjustments colorAdjustments;
     private ChromaticAberration chromaticAberration;
     private Vignette vignette;
 
-    private float currentBlend = 0f;      // 0 = normal, 1 = full effect
+    private float currentBlend = 0f;
     private bool effectActive = false;
 
-   
     private float defaultSaturation;
     private float defaultExposure;
     private float defaultChromaticIntensity;
     private float defaultVignetteIntensity;
 
+    private bool lastShiftState = false;
 
-
+    // 
     private void Start()
     {
         if (postProcessVolume == null)
@@ -55,12 +57,10 @@ public class InsanityVisionEffect : MonoBehaviour
             return;
         }
 
-        // Grab override references from the volume profile
         postProcessVolume.profile.TryGet(out colorAdjustments);
         postProcessVolume.profile.TryGet(out chromaticAberration);
         postProcessVolume.profile.TryGet(out vignette);
 
-        // Store defaults so we can smoothly return to them
         if (colorAdjustments != null)
         {
             defaultSaturation = colorAdjustments.saturation.value;
@@ -73,26 +73,33 @@ public class InsanityVisionEffect : MonoBehaviour
         if (vignette != null)
             defaultVignetteIntensity = vignette.intensity.value;
 
-        // Make sure hidden objects start hidden
-        SetHiddenObjects(false);
+       
+       
+        SetObjectArray(revealOnShift, false);
+      
+        SetObjectArray(hideOnShift, true);
     }
 
     private void Update()
     {
         effectActive = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
-        // Smoothly blend effect in or out
         float targetBlend = effectActive ? 1f : 0f;
         currentBlend = Mathf.MoveTowards(currentBlend, targetBlend, Time.deltaTime * transitionSpeed);
 
         ApplyEffects(currentBlend);
 
-        // Show/hide objects — only toggle at the threshold to avoid constant SetActive calls
-        SetHiddenObjects(currentBlend > 0.5f);
+      
+        bool shiftActive = currentBlend > 0.5f;
+        if (shiftActive != lastShiftState)
+        {
+            lastShiftState = shiftActive;
+            SetObjectArray(revealOnShift, shiftActive);      
+            SetObjectArray(hideOnShift, !shiftActive);      
+        }
     }
 
-    // -- Effect application 
-
+    // 
     private void ApplyEffects(float blend)
     {
         if (colorAdjustments != null)
@@ -112,35 +119,27 @@ public class InsanityVisionEffect : MonoBehaviour
 
         if (vignette != null)
         {
-            // Subtle vignette darkening on edges adds to the dull feeling
             vignette.intensity.value =
                 Mathf.Lerp(defaultVignetteIntensity, defaultVignetteIntensity + 0.25f, blend);
         }
     }
 
-    // -- Hidden objects 
-
-    private bool lastHiddenState = false;
-
-    private void SetHiddenObjects(bool visible)
+    // 
+    private void SetObjectArray(GameObject[] objects, bool visible)
     {
-        if (visible == lastHiddenState) return; // no change, skip
-        lastHiddenState = visible;
+        if (objects == null) return;
 
-        if (hiddenObjects == null) return;
-
-        foreach (GameObject obj in hiddenObjects)
+        foreach (GameObject obj in objects)
         {
             if (obj != null)
                 obj.SetActive(visible);
         }
     }
 
-    // -- Editor helper 
+    //
 
     private void OnValidate()
     {
-        // Clamp inspector values to safe ranges
         targetSaturation = Mathf.Clamp(targetSaturation, -100f, 100f);
         targetChromaticIntensity = Mathf.Clamp01(targetChromaticIntensity);
         transitionSpeed = Mathf.Max(0.1f, transitionSpeed);
