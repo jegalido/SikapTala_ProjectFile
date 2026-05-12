@@ -6,5 +6,5 @@ public class DialogueObject : ScriptableObject
 {
     
 
-   public DialogeLine[] lines;
+   public DialogueLine[] lines;
 }
