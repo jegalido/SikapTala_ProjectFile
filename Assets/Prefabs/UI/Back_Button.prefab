@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 1878782111439451100}
   - component: {fileID: 6875694169315767935}
   - component: {fileID: 1073987085475559811}
+  - component: {fileID: 5615439387750053445}
+  - component: {fileID: 5722883551179613713}
   m_Layer: 5
   m_Name: Back_Button
   m_TagString: Untagged
@@ -60,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1509434, g: 0.1509434, b: 0.1509434, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -121,9 +123,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 7461a8819553e7c4dbb5fc1f2b21fcd2, type: 3}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: OnBackClicked
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -133,6 +135,41 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5615439387750053445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4944123135369097278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f323672658619174ea4b4da3b1fc3707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimator
+  outlineMode: 0
+  transitionSpeed: 12
+  normalText: {r: 1, g: 1, b: 1, a: 1}
+  hoverText: {r: 0.85, g: 0.85, b: 0.85, a: 1}
+  pressedText: {r: 0.65, g: 0.65, b: 0.65, a: 1}
+  normalOutline: {r: 1, g: 1, b: 1, a: 1}
+  hoverOutline: {r: 0.85, g: 0.85, b: 0.85, a: 1}
+  pressedOutline: {r: 0.65, g: 0.65, b: 0.65, a: 1}
+--- !u!114 &5722883551179613713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4944123135369097278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7364830749110651324
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,8 +237,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: BACK
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7b158cb7395c11e469bb1ef889f7de29, type: 2}
+  m_sharedMaterial: {fileID: -5920646896372048766, guid: 7b158cb7395c11e469bb1ef889f7de29, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
