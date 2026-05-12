@@ -13,7 +13,7 @@ public class MenuManager : MonoBehaviour
     {
         Debug.Log("Play clicked");
 
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("MainGameIntroCutScene");
     }
 
     public void OnSettingsClicked()
