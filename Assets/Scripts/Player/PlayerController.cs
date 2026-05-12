@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInput()
     {
-        // Advance dialogue — always active regardless of inDialogue
+     
         if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0))
         {
             if (DialogueManager.dialogueManagerInstance != null)

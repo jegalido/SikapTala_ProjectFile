@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a76531ac10155a94b93990191ba9f05e, type: 3}
   m_Name: MotherDialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueObject
-  lines: []
+  lines:
+  - {fileID: 11400000, guid: ed35538d80daf8f4bbf362253e805df0, type: 2}
+  - {fileID: 11400000, guid: 601809d9bf5f6464cad7dfc6e9e2fe47, type: 2}

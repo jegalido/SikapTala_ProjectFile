@@ -12,5 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e09eb24f6183a47bd6acdfeacfb5c9, type: 3}
   m_Name: MotherAnimationData
   m_EditorClassIdentifier: Assembly-CSharp::SpeakerAnimationData
-  speakerName: 
-  emotionEntries: []
+  speakerName: Mother
+  emotionEntries:
+  - emotion: 0
+    frames:
+    - {fileID: 801835932274502228, guid: e51104bc9a0335b40a0de1e5d430bc33, type: 3}
+    - {fileID: -1188150889984734374, guid: ad6b6ded52101354fa72636712d38cc3, type: 3}
+    - {fileID: 2718684961929612192, guid: 4bab92d1bc156864caaa6dd4bff76854, type: 3}
+    - {fileID: 7034235146082101338, guid: 4b97802aba2ed7a4697344ce4e55ea30, type: 3}
+    - {fileID: 6827562197408563410, guid: 6adc33743b677434890b519a923cdd38, type: 3}
+    frameRate: 8

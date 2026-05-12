@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eed75e1659d8a044da0353f2a1112147, type: 3}
   m_Name: Line_Mother_02
   m_EditorClassIdentifier: Assembly-CSharp::DialogueLine
-  speakerName: Line_Mother_02
-  dialogueText: 
+  speakerName: Mother
+  dialogueText: I made dinner for you.
   emotion: 0
