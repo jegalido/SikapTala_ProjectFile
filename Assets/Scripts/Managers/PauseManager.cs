@@ -3,8 +3,14 @@ using UnityEngine.EventSystems;
 
 public class PauseManager : MonoBehaviour
 {
-    [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject pausePanel; // the whole pause panel
     [SerializeField] private GameObject firstSelectedButton;
+
+    [SerializeField] private GameObject pauseMenuPanel; // buttons container and "pause text"
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject LoadPanel;
+    [SerializeField] private GameObject SavePanel;
+
 
     private bool isPaused;
 
@@ -32,6 +38,8 @@ public class PauseManager : MonoBehaviour
 
         pausePanel.SetActive(true);
 
+
+
         EventSystem.current.SetSelectedGameObject(
             firstSelectedButton
         );
@@ -47,4 +55,46 @@ public class PauseManager : MonoBehaviour
             null
         );
     }
+
+
+
+    public void OnBackClicked(GameObject currentPanel)
+    {
+        Transform parent = currentPanel.transform.parent;
+
+        currentPanel.SetActive(false);
+
+        if (parent.name == "PauseMenu_Panel")
+        {
+            pauseMenuPanel.SetActive(true);
+            return;
+        }
+
+        parent.gameObject.SetActive(true);
+    }
+
+    public void onSettingsClicked()
+    {
+        pauseMenuPanel.SetActive(false);
+        settingsPanel.SetActive(true);
+    }
+
+    public void onLoadClicked()
+    {
+        pauseMenuPanel.SetActive(false);
+        LoadPanel.SetActive(true);
+    }
+
+    public void onSaveClicked()
+    {
+        pauseMenuPanel.SetActive(false);
+        SavePanel.SetActive(true);
+    }
+
+    public void onMainMenuClicked()
+    {
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
 }
