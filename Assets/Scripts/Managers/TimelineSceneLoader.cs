@@ -31,7 +31,7 @@ public class TimelineSceneLoader : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No more scenes in Build Settings!");
+            SceneManager.LoadScene(1); // Loop back to the first scene if we've reached the end
         }
     }
 }
