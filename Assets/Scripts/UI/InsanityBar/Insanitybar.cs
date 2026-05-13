@@ -1,13 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Insanity Bar System with Multi-Checkpoint Support
-/// - Drains over time (rate set in minutes)
-/// - Refills when collecting objects (percent-based)
-/// - Shows a checkpoint prompt when bar hits 0
-/// - Respawns player at the last registered checkpoint
-/// </summary>
 public class InsanityBar : MonoBehaviour
 {
     // -- Public / Inspector fields --------------------------------------------
@@ -75,12 +68,8 @@ public class InsanityBar : MonoBehaviour
         currentInsanity = Mathf.Clamp(currentInsanity, 0f, 100f);
     }
 
-    // -- Checkpoint registration (called by CheckpointTrigger.cs) -------------
+    // -- Checkpoint registration ----------------------------------------------
 
-    /// <summary>
-    /// Called by a CheckpointTrigger when the player enters it.
-    /// Saves the checkpoint world position.
-    /// </summary>
     public void RegisterCheckpoint(Vector3 position)
     {
         lastCheckpointPosition = position;
@@ -88,7 +77,7 @@ public class InsanityBar : MonoBehaviour
         Debug.Log("InsanityBar: Checkpoint registered at " + position);
     }
 
-    // -- Restore logic (called by collectibles) --------------------------------
+    // -- Restore logic --------------------------------------------------------
 
     public void RestoreInsanity(float percent)
     {
@@ -120,15 +109,16 @@ public class InsanityBar : MonoBehaviour
     {
         Debug.Log("InsanityBar: Depleted!");
 
-        // Show the prompt sprite briefly
         if (checkpointPrompt != null)
             checkpointPrompt.SetActive(true);
         else
             Debug.LogWarning("InsanityBar: checkpointPrompt is NOT assigned in the Inspector!");
 
-        // Respawn player at last checkpoint
+        // Teleport player to last checkpoint
         if (hasCheckpoint && player != null)
         {
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
             player.position = lastCheckpointPosition;
             Debug.Log("InsanityBar: Player respawned at " + lastCheckpointPosition);
         }
@@ -137,15 +127,27 @@ public class InsanityBar : MonoBehaviour
             Debug.LogWarning("InsanityBar: No checkpoint registered yet or player not assigned!");
         }
 
-        // Reset bar back to full and hide prompt
         ResetInsanity();
     }
 
     // -- Public utility -------------------------------------------------------
 
+    public Vector3 GetLastCheckpointPosition()
+    {
+        if (!hasCheckpoint)
+        {
+            Debug.LogWarning("InsanityBar: No checkpoint registered yet! Returning current player position.");
+            return player != null ? player.position : Vector3.zero;
+        }
+
+        return lastCheckpointPosition;
+    }
+
     /// <summary>
-    /// Call this to reset insanity and hide the prompt after respawn.
+    /// Returns true if at least one checkpoint has been registered.
     /// </summary>
+    public bool HasCheckpoint() => hasCheckpoint;
+
     public void ResetInsanity()
     {
         currentInsanity = 100f;
@@ -155,8 +157,6 @@ public class InsanityBar : MonoBehaviour
 
         if (checkpointPrompt != null)
             checkpointPrompt.SetActive(false);
-
-        // Time.timeScale = 1f;
     }
 
     public float GetInsanity() => currentInsanity;
