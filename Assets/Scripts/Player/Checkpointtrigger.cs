@@ -1,6 +1,14 @@
 using UnityEngine;
+using Unity.Cinemachine;
 
-
+/// <summary>
+/// Place this on each checkpoint GameObject in your level.
+/// When the player walks into it:
+///   - Registers the respawn point
+///   - Switches the Cinemachine confiner to the matching boundary
+///   - Activates a solid wall collider that blocks the player from going back
+///   - Optionally changes the Cinemachine lens (orthographic size) for zoom effects
+/// </summary>
 public class CheckpointTrigger : MonoBehaviour
 {
     [Header("Checkpoint Settings")]
@@ -14,6 +22,16 @@ public class CheckpointTrigger : MonoBehaviour
     [Tooltip("Which confiner boundary index to switch to (0 = Level 1, 1 = Level 2, etc.)")]
     public int confinerIndex = 0;
 
+    [Header("Camera Lens Override")]
+    [Tooltip("Enable this to change the camera zoom when this checkpoint is reached")]
+    public bool overrideLens = false;
+
+    [Tooltip("Target orthographic size (higher = more zoomed out, lower = more zoomed in). Default is usually 5")]
+    public float targetOrthographicSize = 7f;
+
+    [Tooltip("How smoothly the camera zooms to the new size (higher = faster)")]
+    public float lensTransitionSpeed = 2f;
+
     [Header("Wall Blocker")]
     [Tooltip("Assign a GameObject with a Collider2D that acts as a wall — starts inactive, activates when checkpoint is reached")]
     public GameObject wallBlocker;
@@ -26,7 +44,9 @@ public class CheckpointTrigger : MonoBehaviour
 
     private InsanityBar insanityBar;
     private CameraConfinerSwitcher confinerSwitcher;
+    private CinemachineCamera virtualCamera;
     private bool isActivated = false;
+    private bool isTransitioningLens = false;
 
     // -- Unity lifecycle ------------------------------------------------------
 
@@ -34,6 +54,7 @@ public class CheckpointTrigger : MonoBehaviour
     {
         insanityBar = FindFirstObjectByType<InsanityBar>();
         confinerSwitcher = FindFirstObjectByType<CameraConfinerSwitcher>();
+        virtualCamera = FindFirstObjectByType<CinemachineCamera>();
 
         if (insanityBar == null)
             Debug.LogWarning(checkpointName + ": InsanityBar not found in scene!");
@@ -41,12 +62,31 @@ public class CheckpointTrigger : MonoBehaviour
         if (confinerSwitcher == null)
             Debug.LogWarning(checkpointName + ": CameraConfinerSwitcher not found in scene!");
 
-        // Make sure wall and visual start inactive
+        if (overrideLens && virtualCamera == null)
+            Debug.LogWarning(checkpointName + ": Lens override is on but no CinemachineCamera found!");
+
         if (wallBlocker != null)
             wallBlocker.SetActive(false);
 
         if (activatedVisual != null)
             activatedVisual.SetActive(false);
+    }
+
+    private void Update()
+    {
+        // Smoothly transition lens if activated
+        if (isTransitioningLens && virtualCamera != null)
+        {
+            float current = virtualCamera.Lens.OrthographicSize;
+            float next = Mathf.MoveTowards(current, targetOrthographicSize, lensTransitionSpeed * Time.deltaTime);
+
+            LensSettings lens = virtualCamera.Lens;
+            lens.OrthographicSize = next;
+            virtualCamera.Lens = lens;
+
+            if (Mathf.Approximately(next, targetOrthographicSize))
+                isTransitioningLens = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -63,7 +103,14 @@ public class CheckpointTrigger : MonoBehaviour
         // Switch camera confiner
         confinerSwitcher?.SwitchConfiner(confinerIndex);
 
-        // Activate wall blocker to prevent going back
+        // Start lens transition if enabled
+        if (overrideLens && virtualCamera != null)
+        {
+            isTransitioningLens = true;
+            Debug.Log(checkpointName + ": Starting lens transition to size " + targetOrthographicSize);
+        }
+
+        // Activate wall blocker
         if (wallBlocker != null)
             wallBlocker.SetActive(true);
 
@@ -71,7 +118,7 @@ public class CheckpointTrigger : MonoBehaviour
         if (activatedVisual != null)
             activatedVisual.SetActive(true);
 
-        Debug.Log(checkpointName + ": Activated! Wall blocker enabled, confiner switched to index " + confinerIndex);
+        Debug.Log(checkpointName + ": Activated!");
     }
 
     // -- Editor helper --------------------------------------------------------
@@ -84,7 +131,6 @@ public class CheckpointTrigger : MonoBehaviour
 
         Gizmos.DrawWireCube(transform.position, transform.localScale);
 
-        // Respawn point
         Gizmos.color = Color.cyan;
         Vector3 respawn = transform.position + (Vector3)respawnOffset;
         Gizmos.DrawWireSphere(respawn, 0.2f);
