@@ -4,7 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 public class InsanityVisionEffect : MonoBehaviour
 {
-    // 
+    // -- Public / Inspector fields --------------------------------------------
 
     [Header("Post Processing Volume")]
     [Tooltip("Assign the Global Volume that has your post processing overrides")]
@@ -32,74 +32,85 @@ public class InsanityVisionEffect : MonoBehaviour
     [Tooltip("GameObjects that are VISIBLE normally and become HIDDEN when Shift is held")]
     public GameObject[] hideOnShift;
 
-    // 
+    // -- Private state --------------------------------------------------------
 
     private ColorAdjustments colorAdjustments;
     private ChromaticAberration chromaticAberration;
     private Vignette vignette;
+    private bool postProcessReady = false;
 
     private float currentBlend = 0f;
-    private bool effectActive = false;
+    private bool lastShiftState = false;
 
     private float defaultSaturation;
     private float defaultExposure;
     private float defaultChromaticIntensity;
     private float defaultVignetteIntensity;
 
-    private bool lastShiftState = false;
+    // -- Unity lifecycle ------------------------------------------------------
 
-    // 
     private void Start()
     {
-        if (postProcessVolume == null)
+        // Try to set up post processing — but don't return if it fails
+        // Hidden object logic works independently
+        if (postProcessVolume != null)
         {
-            Debug.LogWarning("InsanityVisionEffect: No Post Process Volume assigned!");
-            return;
+            postProcessVolume.profile.TryGet(out colorAdjustments);
+            postProcessVolume.profile.TryGet(out chromaticAberration);
+            postProcessVolume.profile.TryGet(out vignette);
+
+            if (colorAdjustments != null)
+            {
+                defaultSaturation = colorAdjustments.saturation.value;
+                defaultExposure = colorAdjustments.postExposure.value;
+            }
+
+            if (chromaticAberration != null)
+                defaultChromaticIntensity = chromaticAberration.intensity.value;
+
+            if (vignette != null)
+                defaultVignetteIntensity = vignette.intensity.value;
+
+            postProcessReady = true;
+        }
+        else
+        {
+            Debug.LogWarning("InsanityVisionEffect: No Post Process Volume assigned — screen effects disabled but object visibility still works.");
         }
 
-        postProcessVolume.profile.TryGet(out colorAdjustments);
-        postProcessVolume.profile.TryGet(out chromaticAberration);
-        postProcessVolume.profile.TryGet(out vignette);
-
-        if (colorAdjustments != null)
-        {
-            defaultSaturation = colorAdjustments.saturation.value;
-            defaultExposure = colorAdjustments.postExposure.value;
-        }
-
-        if (chromaticAberration != null)
-            defaultChromaticIntensity = chromaticAberration.intensity.value;
-
-        if (vignette != null)
-            defaultVignetteIntensity = vignette.intensity.value;
-
-       
-       
-        SetObjectArray(revealOnShift, false);
-      
-        SetObjectArray(hideOnShift, true);
+        // Initialize object states regardless of post processing
+        SetObjectArray(revealOnShift, false);  // start hidden
+        SetObjectArray(hideOnShift, true);     // start visible
     }
 
     private void Update()
     {
-        effectActive = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
-        float targetBlend = effectActive ? 1f : 0f;
+        // Smoothly blend post processing effect
+        float targetBlend = shiftHeld ? 1f : 0f;
         currentBlend = Mathf.MoveTowards(currentBlend, targetBlend, Time.deltaTime * transitionSpeed);
 
-        ApplyEffects(currentBlend);
+        // Apply screen effects only if post processing is ready
+        if (postProcessReady)
+            ApplyEffects(currentBlend);
 
-      
+        // Toggle objects at halfway threshold
         bool shiftActive = currentBlend > 0.5f;
         if (shiftActive != lastShiftState)
         {
             lastShiftState = shiftActive;
-            SetObjectArray(revealOnShift, shiftActive);      
-            SetObjectArray(hideOnShift, !shiftActive);      
+            SetObjectArray(revealOnShift, shiftActive);
+            SetObjectArray(hideOnShift, !shiftActive);
+
+            Debug.Log("InsanityVisionEffect: Shift active = " + shiftActive
+                + " | Revealing " + (revealOnShift?.Length ?? 0) + " objects"
+                + " | Hiding " + (hideOnShift?.Length ?? 0) + " objects");
         }
     }
 
-    // 
+    // -- Effect application ---------------------------------------------------
+
     private void ApplyEffects(float blend)
     {
         if (colorAdjustments != null)
@@ -124,7 +135,8 @@ public class InsanityVisionEffect : MonoBehaviour
         }
     }
 
-    // 
+    // -- Object visibility helper ---------------------------------------------
+
     private void SetObjectArray(GameObject[] objects, bool visible)
     {
         if (objects == null) return;
@@ -136,7 +148,7 @@ public class InsanityVisionEffect : MonoBehaviour
         }
     }
 
-    //
+    // -- Editor helper --------------------------------------------------------
 
     private void OnValidate()
     {
