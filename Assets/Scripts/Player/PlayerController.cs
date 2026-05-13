@@ -13,6 +13,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundCheck;
     [SerializeField] private LayerMask thisIsGround;
 
+[Header("Audio")]
+[SerializeField] private AudioClip jumpSFX;
+[SerializeField] private AudioClip[] footstepSFX;
+
+private AudioSource audioSource;
     private bool isGrounded;
     public float xInput;
     public bool isRunning;
@@ -20,10 +25,11 @@ public class PlayerController : MonoBehaviour
     public bool inDialogue = false;
 
     private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponentInChildren<Animator>();
-    }
+{
+    rb = GetComponent<Rigidbody2D>();
+    anim = GetComponentInChildren<Animator>();
+    audioSource = GetComponent<AudioSource>();
+}
 
     void Start() { }
 
@@ -57,8 +63,20 @@ public class PlayerController : MonoBehaviour
     private void HandleJump()
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        if (jumpSFX != null)
+        audioSource.PlayOneShot(jumpSFX);
     }
 
+public void PlayFootstep()
+{
+    if (!isGrounded) return;
+    if (Mathf.Abs(xInput) < 0.1f) return;
+    if (footstepSFX.Length == 0) return;
+    if (inDialogue) return;
+
+    int randomIndex = Random.Range(0, footstepSFX.Length);
+    audioSource.PlayOneShot(footstepSFX[randomIndex]);
+}
     private void HandleCollision()
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheck, thisIsGround);
@@ -72,14 +90,15 @@ public class PlayerController : MonoBehaviour
     }
 
     private void HandleMovemnent()
+{
+    if (inDialogue)
     {
-        if (inDialogue)
-        {
-            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-            return;
-        }
-        rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        return;
     }
+
+    rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+}
 
     private void HandleFlip()
     {
