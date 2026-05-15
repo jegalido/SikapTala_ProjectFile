@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,23 +14,28 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundCheck;
     [SerializeField] private LayerMask thisIsGround;
 
-[Header("Audio")]
-[SerializeField] private AudioClip jumpSFX;
-[SerializeField] private AudioClip[] footstepSFX;
+    [Header("Audio")]
+    [SerializeField] private AudioClip jumpSFX;
+    [SerializeField] private AudioClip[] footstepSFX;
+    private AudioSource audioSource;
 
-private AudioSource audioSource;
     private bool isGrounded;
     public float xInput;
     public bool isRunning;
     private bool facingRight = true;
+
     public bool inDialogue = false;
 
+
+    private bool controlsEnabled = true;
+
+
     private void Awake()
-{
-    rb = GetComponent<Rigidbody2D>();
-    anim = GetComponentInChildren<Animator>();
-    audioSource = GetComponent<AudioSource>();
-}
+    {
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void Start() { }
 
@@ -42,17 +48,18 @@ private AudioSource audioSource;
         HandleAnimation();
     }
 
+
+
     private void HandleInput()
     {
-     
         if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0))
         {
             if (DialogueManager.dialogueManagerInstance != null)
                 DialogueManager.dialogueManagerInstance.OnAdvanceInput();
         }
 
-        // Block movement input during dialogue
-        if (inDialogue) return;
+        // Block movement input during dialogue or when controls disabled
+        if (inDialogue || !controlsEnabled) return;
 
         xInput = Input.GetAxisRaw("Horizontal");
 
@@ -64,23 +71,28 @@ private AudioSource audioSource;
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         if (jumpSFX != null)
-        audioSource.PlayOneShot(jumpSFX);
+            audioSource.PlayOneShot(jumpSFX);
     }
 
-public void PlayFootstep()
-{
-    if (!isGrounded) return;
-    if (Mathf.Abs(xInput) < 0.1f) return;
-    if (footstepSFX.Length == 0) return;
-    if (inDialogue) return;
+    public void PlayFootstep()
+    {
+        if (!isGrounded) return;
+        if (Mathf.Abs(xInput) < 0.1f) return;
+        if (footstepSFX.Length == 0) return;
+        if (inDialogue) return;
+        if (!controlsEnabled) return;
 
-    int randomIndex = Random.Range(0, footstepSFX.Length);
-    audioSource.PlayOneShot(footstepSFX[randomIndex]);
-}
+        int randomIndex = Random.Range(0, footstepSFX.Length);
+        audioSource.PlayOneShot(footstepSFX[randomIndex]);
+    }
+
+
     private void HandleCollision()
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheck, thisIsGround);
     }
+
+  
 
     private void HandleAnimation()
     {
@@ -89,16 +101,19 @@ public void PlayFootstep()
         anim.SetBool("isGrounded", isGrounded);
     }
 
+
     private void HandleMovemnent()
-{
-    if (inDialogue)
     {
-        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-        return;
+        if (inDialogue || !controlsEnabled)
+        {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            return;
+        }
+
+        rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
     }
 
-    rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
-}
+
 
     private void HandleFlip()
     {
@@ -111,6 +126,24 @@ public void PlayFootstep()
         transform.Rotate(0f, 180f, 0f);
         facingRight = !facingRight;
     }
+
+
+    public void EnableControl()
+    {
+        controlsEnabled = true;
+        inDialogue = false;
+        Debug.Log("PlayerController: Controls enabled.");
+    }
+
+
+    public void DisableControl()
+    {
+        controlsEnabled = false;
+        xInput = 0f;
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        Debug.Log("PlayerController: Controls disabled.");
+    }
+
 
     private void OnDrawGizmos()
     {

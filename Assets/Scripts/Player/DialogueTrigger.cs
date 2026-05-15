@@ -4,9 +4,7 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField] private DialogueObject dialogueObject;
-
     public static Action OnDialogueEnded;
-
     private bool hasTriggered = false;
     private PlayerController playerMovement;
 
@@ -41,7 +39,11 @@ public class DialogueTrigger : MonoBehaviour
 
     private void HandleDialogueEnded()
     {
+        if (!hasTriggered) return;
+
         if (playerMovement != null)
             playerMovement.inDialogue = false;
+
+        Destroy(gameObject);
     }
 }
