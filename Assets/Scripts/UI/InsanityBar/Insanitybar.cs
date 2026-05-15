@@ -132,6 +132,10 @@ public class InsanityBar : MonoBehaviour
 
     // -- Public utility -------------------------------------------------------
 
+    /// <summary>
+    /// Returns the last registered checkpoint position.
+    /// Used by DeathZone to teleport the player on fall.
+    /// </summary>
     public Vector3 GetLastCheckpointPosition()
     {
         if (!hasCheckpoint)
@@ -157,6 +161,9 @@ public class InsanityBar : MonoBehaviour
 
         if (checkpointPrompt != null)
             checkpointPrompt.SetActive(false);
+
+        // Make all collectibles reappear
+        CollectibleManager.ResetAll();
     }
 
     public float GetInsanity() => currentInsanity;
