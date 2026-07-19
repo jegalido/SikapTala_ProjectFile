@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.InputSystem;
 
 public class InsanityVisionEffect : MonoBehaviour
 {
@@ -32,6 +33,10 @@ public class InsanityVisionEffect : MonoBehaviour
     [Tooltip("GameObjects that are VISIBLE normally and become HIDDEN when Shift is held")]
     public GameObject[] hideOnShift;
 
+    [Header("Gamepad")]
+    [Tooltip("Analog threshold for L2 to count as 'held'")]
+    [Range(0f, 1f)] public float triggerThreshold = 0.1f;
+
     // -- Private state --------------------------------------------------------
 
     private ColorAdjustments colorAdjustments;
@@ -51,8 +56,6 @@ public class InsanityVisionEffect : MonoBehaviour
 
     private void Start()
     {
-        // Try to set up post processing — but don't return if it fails
-        // Hidden object logic works independently
         if (postProcessVolume != null)
         {
             postProcessVolume.profile.TryGet(out colorAdjustments);
@@ -78,24 +81,24 @@ public class InsanityVisionEffect : MonoBehaviour
             Debug.LogWarning("InsanityVisionEffect: No Post Process Volume assigned — screen effects disabled but object visibility still works.");
         }
 
-        // Initialize object states regardless of post processing
-        SetObjectArray(revealOnShift, false);  // start hidden
-        SetObjectArray(hideOnShift, true);     // start visible
+        SetObjectArray(revealOnShift, false);
+        SetObjectArray(hideOnShift, true);
     }
 
     private void Update()
     {
-        bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        Gamepad pad = Gamepad.current;
 
-        // Smoothly blend post processing effect
+        bool shiftHeld = Input.GetKey(KeyCode.LeftShift)
+            || Input.GetKey(KeyCode.RightShift)
+            || (pad != null && pad.rightTrigger.ReadValue() > triggerThreshold);
+
         float targetBlend = shiftHeld ? 1f : 0f;
         currentBlend = Mathf.MoveTowards(currentBlend, targetBlend, Time.deltaTime * transitionSpeed);
 
-        // Apply screen effects only if post processing is ready
         if (postProcessReady)
             ApplyEffects(currentBlend);
 
-        // Toggle objects at halfway threshold
         bool shiftActive = currentBlend > 0.5f;
         if (shiftActive != lastShiftState)
         {
@@ -108,8 +111,6 @@ public class InsanityVisionEffect : MonoBehaviour
                 + " | Hiding " + (hideOnShift?.Length ?? 0) + " objects");
         }
     }
-
-    // -- Effect application ---------------------------------------------------
 
     private void ApplyEffects(float blend)
     {
@@ -135,8 +136,6 @@ public class InsanityVisionEffect : MonoBehaviour
         }
     }
 
-    // -- Object visibility helper ---------------------------------------------
-
     private void SetObjectArray(GameObject[] objects, bool visible)
     {
         if (objects == null) return;
@@ -147,8 +146,6 @@ public class InsanityVisionEffect : MonoBehaviour
                 obj.SetActive(visible);
         }
     }
-
-    // -- Editor helper --------------------------------------------------------
 
     private void OnValidate()
     {

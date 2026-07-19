@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class PauseManager : MonoBehaviour
 {
@@ -9,23 +10,40 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject LoadPanel;
     [SerializeField] private GameObject SavePanel;
-
     [Header("Blur")]
     [SerializeField] private Material screenBlurMaterial; // M_ScreenBlur
     [SerializeField] private float maxBlurSize = 3f;       // tune to taste
     [SerializeField] private float blurFadeDuration = 0.25f;
-
     private static readonly int BlurSizeID = Shader.PropertyToID("_BlurSize");
-
     private bool isPaused;
     private Coroutine blurRoutine;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        Gamepad pad = Gamepad.current;
+
+        // Pause: Escape or Start
+        bool pausePressed = Input.GetKeyDown(KeyCode.Escape)
+            || (pad != null && pad.startButton.wasPressedThisFrame);
+
+        if (pausePressed)
         {
             TogglePause();
         }
+
+        // Back: Circle, only while paused and a sub-panel is open
+        bool backPressed = pad != null && pad.buttonEast.wasPressedThisFrame;
+        if (isPaused && backPressed)
+        {
+            HandleControllerBack();
+        }
+    }
+
+    private void HandleControllerBack()
+    {
+        if (settingsPanel.activeSelf) OnBackClicked(settingsPanel);
+        else if (LoadPanel.activeSelf) OnBackClicked(LoadPanel);
+        else if (SavePanel.activeSelf) OnBackClicked(SavePanel);
     }
 
     public void TogglePause()
@@ -36,7 +54,6 @@ public class PauseManager : MonoBehaviour
         else
             ResumeGame();
     }
-
     private void PauseGame()
     {
         Time.timeScale = 0f;
@@ -44,7 +61,6 @@ public class PauseManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(firstSelectedButton);
         FadeBlur(maxBlurSize);
     }
-
     public void ResumeGame()
     {
         Time.timeScale = 1f;
@@ -52,22 +68,17 @@ public class PauseManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         FadeBlur(0f);
     }
-
     private void FadeBlur(float target)
     {
         if (screenBlurMaterial == null) return;
-
         if (blurRoutine != null)
             StopCoroutine(blurRoutine);
-
         blurRoutine = StartCoroutine(FadeBlurRoutine(target));
     }
-
     private System.Collections.IEnumerator FadeBlurRoutine(float target)
     {
         float start = screenBlurMaterial.GetFloat(BlurSizeID);
         float t = 0f;
-
         while (t < blurFadeDuration)
         {
             t += Time.unscaledDeltaTime;
@@ -75,10 +86,8 @@ public class PauseManager : MonoBehaviour
             screenBlurMaterial.SetFloat(BlurSizeID, value);
             yield return null;
         }
-
         screenBlurMaterial.SetFloat(BlurSizeID, target);
     }
-
     public void OnBackClicked(GameObject currentPanel)
     {
         Transform parent = currentPanel.transform.parent;
@@ -90,25 +99,21 @@ public class PauseManager : MonoBehaviour
         }
         parent.gameObject.SetActive(true);
     }
-
     public void onSettingsClicked()
     {
         pauseMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
     }
-
     public void onLoadClicked()
     {
         pauseMenuPanel.SetActive(false);
         LoadPanel.SetActive(true);
     }
-
     public void onSaveClicked()
     {
         pauseMenuPanel.SetActive(false);
         SavePanel.SetActive(true);
     }
-
     public void onMainMenuClicked()
     {
         Time.timeScale = 1f;
