@@ -3,7 +3,9 @@ using UnityEngine.EventSystems;
 
 public class ButtonHover : MonoBehaviour,
     IPointerEnterHandler,
-    IPointerExitHandler
+    IPointerExitHandler,
+    ISelectHandler,
+    IDeselectHandler
 {
     public Animator glowAnimator;
     public Animator normalTextAnimator;
@@ -11,15 +13,28 @@ public class ButtonHover : MonoBehaviour,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        glowAnimator.SetBool("Hover", true);
-        normalTextAnimator.SetBool("Hover", true);
-        glowTextAnimator.SetBool("Hover", true);
+        SetGlow(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        glowAnimator.SetBool("Hover", false);
-        normalTextAnimator.SetBool("Hover", false);
-        glowTextAnimator.SetBool("Hover", false);
+        SetGlow(false);
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        SetGlow(true);
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        SetGlow(false);
+    }
+
+    private void SetGlow(bool state)
+    {
+        glowAnimator.SetBool("Hover", state);
+        normalTextAnimator.SetBool("Hover", state);
+        glowTextAnimator.SetBool("Hover", state);
     }
 }
