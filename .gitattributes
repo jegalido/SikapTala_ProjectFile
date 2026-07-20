@@ -41,3 +41,10 @@ Build_Versions/v2/SikapTala_ProjectFile_Data/level0 filter=lfs diff=lfs merge=lf
 Build_Versions/v2/SikapTala_ProjectFile_Data/globalgamemanagers filter=lfs diff=lfs merge=lfs -text
 Build_Versions/v2/SikapTala_ProjectFile_Data/Resources/unity_builtin_extra filter=lfs diff=lfs merge=lfs -text
 Build_Versions/v1/SikapTala_ProjectFile_Data/level3 filter=lfs diff=lfs merge=lfs -text
+Build_Versions/v4/SikapTala_ProjectFile_Data/globalgamemanagers filter=lfs diff=lfs merge=lfs -text
+Build_Versions/v4/SikapTala_ProjectFile_Data/level3 filter=lfs diff=lfs merge=lfs -text
+Build_Versions/v4/SikapTala_ProjectFile_Data/Resources/unity[[:space:]]default[[:space:]]resources filter=lfs diff=lfs merge=lfs -text
+Build_Versions/v4/SikapTala_ProjectFile_Data/Resources/unity_builtin_extra filter=lfs diff=lfs merge=lfs -text
+Build_Versions/v4/SikapTala_ProjectFile_Data/level1 filter=lfs diff=lfs merge=lfs -text
+Build_Versions/v4/SikapTala_ProjectFile_Data/level2 filter=lfs diff=lfs merge=lfs -text
+Build_Versions/v4/SikapTala_ProjectFile_Data/level0 filter=lfs diff=lfs merge=lfs -text
