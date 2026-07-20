@@ -3068,6 +3068,7 @@ MonoBehaviour:
   settingsFirstSelected: {fileID: 1845143584}
   creditsFirstSelected: {fileID: 9497669}
   howToPlayFirstSelected: {fileID: 1541489116}
+  screenBlurMaterial: {fileID: 2100000, guid: ee657b41306fd81469f4bda067587344, type: 2}
 --- !u!1 &593950855
 GameObject:
   m_ObjectHideFlags: 0

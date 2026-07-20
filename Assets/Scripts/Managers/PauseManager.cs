@@ -117,7 +117,10 @@ public class PauseManager : MonoBehaviour
     public void onMainMenuClicked()
     {
         Time.timeScale = 1f;
-        FadeBlur(0f);
+
+        if (screenBlurMaterial != null)
+            screenBlurMaterial.SetFloat(BlurSizeID, 0f); // instant, no fade — scene is about to unload anyway
+
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 }

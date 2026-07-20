@@ -18,8 +18,16 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] private GameObject howToPlayFirstSelected;
 
+    [Header("Blur")]
+    [SerializeField] private Material screenBlurMaterial; // same M_ScreenBlur asset
+
+    private static readonly int BlurSizeID = Shader.PropertyToID("_BlurSize");
+
     private void Start()
     {
+        if (screenBlurMaterial != null)
+            screenBlurMaterial.SetFloat(BlurSizeID, 0f);
+
         EventSystem.current.SetSelectedGameObject(mainMenuFirstSelected);
         Debug.Log("Selected: " + EventSystem.current.currentSelectedGameObject);
     }
