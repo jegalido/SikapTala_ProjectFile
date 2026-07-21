@@ -31052,6 +31052,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5567519244276030247, guid: e068945604ce77d46ba3ffd6688fa89f, type: 3}
+      propertyPath: m_Size.x
+      value: 1.4579926
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567519244276030247, guid: e068945604ce77d46ba3ffd6688fa89f, type: 3}
+      propertyPath: m_Size.y
+      value: 8.179494
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567519244276030247, guid: e068945604ce77d46ba3ffd6688fa89f, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.9348984
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567519244276030247, guid: e068945604ce77d46ba3ffd6688fa89f, type: 3}
+      propertyPath: m_Offset.y
+      value: 3.8010802
+      objectReference: {fileID: 0}
     - target: {fileID: 5602077750597373550, guid: e068945604ce77d46ba3ffd6688fa89f, type: 3}
       propertyPath: wallBlocker
       value: 
@@ -31059,6 +31075,10 @@ PrefabInstance:
     - target: {fileID: 5602077750597373550, guid: e068945604ce77d46ba3ffd6688fa89f, type: 3}
       propertyPath: confinerIndex
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5602077750597373550, guid: e068945604ce77d46ba3ffd6688fa89f, type: 3}
+      propertyPath: respawnOffset.x
+      value: 0.89
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
