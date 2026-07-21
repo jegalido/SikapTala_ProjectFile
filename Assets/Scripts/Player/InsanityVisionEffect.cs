@@ -45,6 +45,7 @@ public class InsanityVisionEffect : MonoBehaviour
     private bool postProcessReady = false;
 
     private float currentBlend = 0f;
+    public float ShiftBlend => currentBlend;
     private bool lastShiftState = false;
 
     private float defaultSaturation;
