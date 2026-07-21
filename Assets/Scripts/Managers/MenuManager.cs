@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class MenuManager : MonoBehaviour
@@ -16,20 +18,29 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject settingsFirstSelected;
     [SerializeField] private GameObject creditsFirstSelected;
 
-    [SerializeField] private GameObject howToPlayFirstSelected;
+    
+
+    [Header("Settings")]
+    [SerializeField] private Toggle fullscreenToggle;
+[SerializeField] private GameObject howToPlayFirstSelected;
 
     [Header("Blur")]
     [SerializeField] private Material screenBlurMaterial; // same M_ScreenBlur asset
 
     private static readonly int BlurSizeID = Shader.PropertyToID("_BlurSize");
 
-    private void Start()
+private void Start()
     {
         if (screenBlurMaterial != null)
             screenBlurMaterial.SetFloat(BlurSizeID, 0f);
 
+        if (fullscreenToggle != null)
+        {
+            fullscreenToggle.SetIsOnWithoutNotify(Screen.fullScreen);
+            fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
+        }
+
         EventSystem.current.SetSelectedGameObject(mainMenuFirstSelected);
-        Debug.Log("Selected: " + EventSystem.current.currentSelectedGameObject);
     }
 
     private void Update()
@@ -52,12 +63,19 @@ public class MenuManager : MonoBehaviour
         Debug.Log("Play clicked at time: " + Time.realtimeSinceStartup);
         SceneManager.LoadScene("MainGameIntroCutScene");
     }
-    public void OnSettingsClicked()
+public void OnSettingsClicked()
     {
         mainMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
+        if (fullscreenToggle != null) fullscreenToggle.SetIsOnWithoutNotify(Screen.fullScreen);
         EventSystem.current.SetSelectedGameObject(settingsFirstSelected);
     }
+
+public void SetFullscreen(bool value)
+    {
+        Screen.fullScreen = value;
+    }
+
     public void OnQuitClicked()
     {
         Debug.Log("Quit clicked");
