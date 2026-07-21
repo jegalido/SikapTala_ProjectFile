@@ -216,7 +216,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -724, y: 379.50113}
+  m_AnchoredPosition: {x: -723.4, y: 379.50113}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!95 &4996713
@@ -34891,7 +34891,7 @@ MonoBehaviour:
   navRepeatDelay: 0.35
   navRepeatRate: 0.12
   screenBlurMaterial: {fileID: 2100000, guid: ee657b41306fd81469f4bda067587344, type: 2}
-  maxBlurSize: 0
+  maxBlurSize: 3
   blurFadeDuration: 0.25
 --- !u!4 &1877166302
 Transform:
