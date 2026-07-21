@@ -78,7 +78,7 @@ public class InsanityVisionEffect : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("InsanityVisionEffect: No Post Process Volume assigned — screen effects disabled but object visibility still works.");
+            Debug.LogWarning("InsanityVisionEffect: No Post Process Volume assigned ï¿½ screen effects disabled but object visibility still works.");
         }
 
         SetObjectArray(revealOnShift, false);

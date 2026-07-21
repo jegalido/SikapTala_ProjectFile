@@ -33,6 +33,11 @@ public class PlayerController : MonoBehaviour
     void Start() { }
     void Update()
     {
+        // Freeze all player logic while the game is paused (Time.timeScale == 0).
+        // Prevents the sprite from flipping when the pause menu reads arrow keys.
+        if (Time.timeScale == 0f)
+            return;
+
         HandleCollision();
         HandleInput();
         HandleMovemnent();

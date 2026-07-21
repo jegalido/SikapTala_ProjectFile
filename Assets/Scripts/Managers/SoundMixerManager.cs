@@ -13,8 +13,8 @@ public class SoundMixerManager : MonoBehaviour
     {
         audioMixer.SetFloat("musicVolume", volume);
     }
-    public void SetSFXVolume(float volume)
+public void SetSFXVolume(float volume)
     {
-        audioMixer.SetFloat("SFXVolume", volume);
+        audioMixer.SetFloat("sfxVolume", volume);
     }
 }
