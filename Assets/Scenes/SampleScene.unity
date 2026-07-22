@@ -13549,10 +13549,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 61570198}
   - {fileID: 264607035}
-  - {fileID: 1573357517}
+  - {fileID: 61570198}
   - {fileID: 1550164862}
+  - {fileID: 1573357517}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -22989,8 +22989,6 @@ GameObject:
   - component: {fileID: 1198804025}
   - component: {fileID: 1198804027}
   - component: {fileID: 1198804026}
-  - component: {fileID: 1198804029}
-  - component: {fileID: 1198804028}
   m_Layer: 5
   m_Name: Tutorial_Panel
   m_TagString: Untagged
@@ -23058,40 +23056,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1198804024}
   m_CullTransparentMesh: 1
---- !u!225 &1198804028
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1198804024}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!95 &1198804029
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1198804024}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7eca65b1132789248813f1c87922fb07, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 2
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1209849558
 GameObject:
   m_ObjectHideFlags: 0
@@ -28877,10 +28841,10 @@ RectTransform:
   - {fileID: 1415150720}
   - {fileID: 1727228255}
   - {fileID: 905103136}
+  - {fileID: 1326939890}
   - {fileID: 1893836639}
   - {fileID: 1198804025}
   - {fileID: 376520275}
-  - {fileID: 1326939890}
   m_Father: {fileID: 621246058}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -319273,7 +319237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2122184179
 RectTransform:
   m_ObjectHideFlags: 0
