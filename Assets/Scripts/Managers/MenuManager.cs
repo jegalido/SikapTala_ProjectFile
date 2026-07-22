@@ -25,7 +25,10 @@ public class MenuManager : MonoBehaviour
 
     [Header("Blur")]
     [SerializeField] private Material screenBlurMaterial; // same M_ScreenBlur asset
+    [SerializeField] private float maxBlurSize = 3f;
+    [SerializeField] private float blurFadeDuration = 0.25f;
     private static readonly int BlurSizeID = Shader.PropertyToID("_BlurSize");
+    private Coroutine blurRoutine;
 
     [Header("Intro Animation")]
     [SerializeField] private Animator mainMenuAnimator; // MainMenu_Panel's Animator
@@ -75,6 +78,28 @@ public class MenuManager : MonoBehaviour
         mainMenuCanvasGroup.blocksRaycasts = false;
     }
 
+    private void FadeBlur(float target)
+    {
+        if (screenBlurMaterial == null) return;
+        if (blurRoutine != null)
+            StopCoroutine(blurRoutine);
+        blurRoutine = StartCoroutine(FadeBlurRoutine(target));
+    }
+
+    private System.Collections.IEnumerator FadeBlurRoutine(float target)
+    {
+        float start = screenBlurMaterial.GetFloat(BlurSizeID);
+        float t = 0f;
+        while (t < blurFadeDuration)
+        {
+            t += Time.unscaledDeltaTime;
+            float value = Mathf.Lerp(start, target, t / blurFadeDuration);
+            screenBlurMaterial.SetFloat(BlurSizeID, value);
+            yield return null;
+        }
+        screenBlurMaterial.SetFloat(BlurSizeID, target);
+    }
+
     public void OnPlayClicked()
     {
         Debug.Log("Play clicked at time: " + Time.realtimeSinceStartup);
@@ -111,6 +136,10 @@ public class MenuManager : MonoBehaviour
     {
         Transform parent = currentPanel.transform.parent;
         currentPanel.SetActive(false);
+
+        if (currentPanel == howToPlayPanel)
+            FadeBlur(0f);
+
         if (parent.name == "Main_Canvas")
         {
             ShowMainMenu();
@@ -125,6 +154,7 @@ public class MenuManager : MonoBehaviour
     {
         HideMainMenu();
         howToPlayPanel.SetActive(true);
+        FadeBlur(maxBlurSize);
         EventSystem.current.SetSelectedGameObject(howToPlayFirstSelected);
     }
 }

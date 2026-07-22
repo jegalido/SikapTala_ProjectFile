@@ -21,7 +21,7 @@ public class SlideshowController : MonoBehaviour
     [SerializeField] private float sideScale = 0.9f;
 
     [Header("Vertical Offset")]
-    [SerializeField] private float centeredYOffset = 30f; // how much higher the centered slide sits
+    [SerializeField] private float centeredYOffset = 30f;
     [SerializeField] private float sideYOffset = 0f;
 
     [SerializeField] private AnimationCurve fadeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
@@ -32,18 +32,22 @@ public class SlideshowController : MonoBehaviour
 
     private int currentIndex = 0;
     private Coroutine moveRoutine;
-    private float[] baseYPositions; // each slide's original Y, before offset is applied
+    private float[] baseYPositions;
+
+    // ---- THE FIX: capture once in Awake, not every OnEnable ----
+    private void Awake()
+    {
+        baseYPositions = new float[slides.Length];
+        for (int i = 0; i < slides.Length; i++)
+            baseYPositions[i] = slides[i].anchoredPosition.y;
+    }
 
     private void OnEnable()
     {
         currentIndex = 0;
-
-        baseYPositions = new float[slides.Length];
-        for (int i = 0; i < slides.Length; i++)
-            baseYPositions[i] = slides[i].anchoredPosition.y;
-
-        SnapToIndex(currentIndex);
+        SnapToIndex(currentIndex); // no longer recalculates baseYPositions here
     }
+    // --------------------------------------------------------------
 
     private void Update()
     {
@@ -128,16 +132,13 @@ public class SlideshowController : MonoBehaviour
         for (int i = 0; i < slides.Length; i++)
         {
             float distance = Mathf.Abs(slides[i].anchoredPosition.x) / slideSpacing;
-            float normalized = Mathf.Clamp01(distance); // 0 = centered, 1 = fully to the side
+            float normalized = Mathf.Clamp01(distance);
 
-            // Alpha
             slideCanvasGroups[i].alpha = Mathf.Lerp(centeredAlpha, sideAlpha, normalized);
 
-            // Scale
             float scale = Mathf.Lerp(centeredScale, sideScale, normalized);
             slides[i].localScale = new Vector3(scale, scale, 1f);
 
-            // Vertical offset (added on top of base Y)
             float yOffset = Mathf.Lerp(centeredYOffset, sideYOffset, normalized);
             Vector2 pos = slides[i].anchoredPosition;
             slides[i].anchoredPosition = new Vector2(pos.x, baseYPositions[i] + yOffset);
