@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Video;
 
 public class SlideshowController : MonoBehaviour
 {
     [Header("Slides")]
     [SerializeField] private RectTransform[] slides;
     [SerializeField] private CanvasGroup[] slideCanvasGroups;
+    [SerializeField] private VideoPlayer[] slideVideoPlayers; // null entries allowed for non-video slides
 
     [Header("Layout")]
     [SerializeField] private float slideSpacing = 800f;
@@ -34,7 +36,6 @@ public class SlideshowController : MonoBehaviour
     private Coroutine moveRoutine;
     private float[] baseYPositions;
 
-    // ---- THE FIX: capture once in Awake, not every OnEnable ----
     private void Awake()
     {
         baseYPositions = new float[slides.Length];
@@ -44,10 +45,15 @@ public class SlideshowController : MonoBehaviour
 
     private void OnEnable()
     {
-        currentIndex = 0;
-        SnapToIndex(currentIndex); // no longer recalculates baseYPositions here
+        currentIndex = slides.Length - 1;
+        SnapToIndex(currentIndex);
     }
-    // --------------------------------------------------------------
+
+    private void OnDisable()
+    {
+        // Stop all videos when panel closes, so nothing keeps playing in the background
+        PauseAllVideos();
+    }
 
     private void Update()
     {
@@ -84,6 +90,7 @@ public class SlideshowController : MonoBehaviour
         }
         UpdateVisuals(index);
         UpdateButtonVisibility();
+        UpdateVideoPlayback(index);
     }
 
     private void MoveToIndex(int index)
@@ -91,6 +98,7 @@ public class SlideshowController : MonoBehaviour
         if (moveRoutine != null) StopCoroutine(moveRoutine);
         moveRoutine = StartCoroutine(MoveRoutine(index));
         UpdateButtonVisibility();
+        UpdateVideoPlayback(index);
     }
 
     private System.Collections.IEnumerator MoveRoutine(int index)
@@ -142,6 +150,36 @@ public class SlideshowController : MonoBehaviour
             float yOffset = Mathf.Lerp(centeredYOffset, sideYOffset, normalized);
             Vector2 pos = slides[i].anchoredPosition;
             slides[i].anchoredPosition = new Vector2(pos.x, baseYPositions[i] + yOffset);
+        }
+    }
+
+    private void UpdateVideoPlayback(int centerIndex)
+    {
+        if (slideVideoPlayers == null) return;
+
+        for (int i = 0; i < slideVideoPlayers.Length; i++)
+        {
+            VideoPlayer vp = slideVideoPlayers[i];
+            if (vp == null) continue; // this slide isn't a video slide
+
+            if (i == centerIndex)
+            {
+                vp.Play();
+            }
+            else
+            {
+                vp.Pause();
+            }
+        }
+    }
+
+    private void PauseAllVideos()
+    {
+        if (slideVideoPlayers == null) return;
+
+        foreach (VideoPlayer vp in slideVideoPlayers)
+        {
+            if (vp != null) vp.Pause();
         }
     }
 
