@@ -11876,6 +11876,7 @@ GameObject:
   - component: {fileID: 1938166983}
   - component: {fileID: 1938166982}
   - component: {fileID: 1938166985}
+  - component: {fileID: 1938166986}
   m_Layer: 5
   m_Name: Buttons_Container
   m_TagString: Untagged
@@ -11983,6 +11984,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1938166986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938166980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf3ee95fd9c63cf4f8bb58e24308c181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectionCursorIgnore
 --- !u!1 &1954319039
 GameObject:
   m_ObjectHideFlags: 0

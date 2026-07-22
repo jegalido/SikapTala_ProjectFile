@@ -37,7 +37,6 @@ public class InsanityVisionEffect : MonoBehaviour
     [Tooltip("Analog threshold for L2 to count as 'held'")]
     [Range(0f, 1f)] public float triggerThreshold = 0.1f;
 
-    public static float ShiftBlend { get; private set; }
     // -- Private state --------------------------------------------------------
 
     private ColorAdjustments colorAdjustments;
@@ -45,8 +44,9 @@ public class InsanityVisionEffect : MonoBehaviour
     private Vignette vignette;
     private bool postProcessReady = false;
 
-    private float currentBlend = 0f;
+    
     public float ShiftBlend => currentBlend;
+private float currentBlend = 0f;
     private bool lastShiftState = false;
 
     private float defaultSaturation;
@@ -97,8 +97,7 @@ public class InsanityVisionEffect : MonoBehaviour
 
         float targetBlend = shiftHeld ? 1f : 0f;
         
-        ShiftBlend = currentBlend;
-currentBlend = Mathf.MoveTowards(currentBlend, targetBlend, Time.deltaTime * transitionSpeed);
+        currentBlend = Mathf.MoveTowards(currentBlend, targetBlend, Time.deltaTime * transitionSpeed);
 
         if (postProcessReady)
             ApplyEffects(currentBlend);

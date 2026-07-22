@@ -123,6 +123,12 @@ public class UISelectionCursor : MonoBehaviour
         return g != null && g.activeInHierarchy && g.GetComponent<Selectable>() != null;
     }
 
+private static bool IsIgnored(GameObject g)
+    {
+        return g != null && g.GetComponentInParent<SelectionCursorIgnore>(true) != null;
+    }
+
+
     private GameObject CurrentValidSelection()
     {
         var es = EventSystem.current;
@@ -143,7 +149,7 @@ public class UISelectionCursor : MonoBehaviour
             selGO = lastSelected;
         }
 
-        bool show = mode == InputMode.Nav && selGO != null;
+        bool show = mode == InputMode.Nav && selGO != null && !IsIgnored(selGO);
 
         if (show)
         {
