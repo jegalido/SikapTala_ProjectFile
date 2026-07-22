@@ -24,6 +24,22 @@ public class InsanityBar : MonoBehaviour
     [Tooltip("Drag your Player GameObject here")]
     public Transform player;
 
+    [Header("Shift Drain")]
+    [Tooltip("Extra sanity drain multiplier while the player voluntarily holds Shift.")]
+    public float manualShiftDrainMultiplier = 2.5f;
+    [Tooltip("Leave empty to auto-find. Used to detect manual shifting for faster drain.")]
+    public InsanityVisionEffect visionEffect;
+
+    [Header("Shift Glow (drains faster feedback)")]
+    [Tooltip("Glow/outline color pulsed on the sanity bar while the player holds Shift.")]
+    public Color shiftGlowColor = new Color(1f, 0.5f, 0.15f, 1f);
+    public float glowPulseSpeed = 10f;
+    [Tooltip("How much the bar breathes (scales) while shifting.")]
+    public float glowScalePulse = 0.05f;
+    private Outline fillOutline;
+    private RectTransform barRect;
+    private Vector3 barBaseScale = Vector3.one;
+
     // -- Private state --------------------------------------------------------
 
     private float currentInsanity;
@@ -33,7 +49,7 @@ public class InsanityBar : MonoBehaviour
 
     // -- Unity lifecycle ------------------------------------------------------
 
-    private void Start()
+private void Start()
     {
         currentInsanity = 100f;
         isDepleted = false;
@@ -48,23 +64,61 @@ public class InsanityBar : MonoBehaviour
 
         if (checkpointPrompt != null)
             checkpointPrompt.SetActive(false);
+
+        if (visionEffect == null)
+            visionEffect = FindFirstObjectByType<InsanityVisionEffect>();
+
+        if (insanitySlider != null && insanitySlider.fillRect != null)
+        {
+            Image fillImg = insanitySlider.fillRect.GetComponent<Image>();
+            if (fillImg != null)
+            {
+                fillOutline = fillImg.GetComponent<Outline>();
+                if (fillOutline == null) fillOutline = fillImg.gameObject.AddComponent<Outline>();
+                fillOutline.effectDistance = new Vector2(5f, 5f);
+                Color c = shiftGlowColor; c.a = 0f; fillOutline.effectColor = c;
+            }
+            barRect = insanitySlider.transform as RectTransform;
+            if (barRect != null) barBaseScale = barRect.localScale;
+        }
     }
 
-    private void Update()
+private void Update()
     {
-        if (isDepleted) return;
-
+        // Sanity is now persistent pressure - it drains but never triggers a respawn.
         DrainInsanity();
         UpdateSliderUI();
-        CheckDepletion();
+        UpdateShiftGlow();
+    }
+
+    private void UpdateShiftGlow()
+    {
+        bool shifting = visionEffect != null && visionEffect.ManualShiftActive;
+        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * glowPulseSpeed);
+
+        if (fillOutline != null)
+        {
+            Color c = shiftGlowColor;
+            c.a = shifting
+                ? Mathf.Lerp(0.35f, 1f, pulse)
+                : Mathf.MoveTowards(fillOutline.effectColor.a, 0f, Time.unscaledDeltaTime * 8f);
+            fillOutline.effectColor = c;
+        }
+
+        if (barRect != null)
+        {
+            float s = shifting ? (1f + glowScalePulse * pulse) : 1f;
+            barRect.localScale = barBaseScale * s;
+        }
     }
 
     // -- Drain logic ----------------------------------------------------------
 
-    private void DrainInsanity()
+private void DrainInsanity()
     {
         float drainPerSecond = 100f / (drainDurationInMinutes * 60f);
-        currentInsanity -= drainPerSecond * Time.deltaTime;
+        float mult = (visionEffect != null && visionEffect.ManualShiftActive) ? manualShiftDrainMultiplier : 1f;
+        currentInsanity -= drainPerSecond * mult * Time.deltaTime;
         currentInsanity = Mathf.Clamp(currentInsanity, 0f, 100f);
     }
 
@@ -79,10 +133,8 @@ public class InsanityBar : MonoBehaviour
 
     // -- Restore logic --------------------------------------------------------
 
-    public void RestoreInsanity(float percent)
+public void RestoreInsanity(float percent)
     {
-        if (isDepleted) return;
-
         currentInsanity += Mathf.Clamp(percent, 0f, 100f);
         currentInsanity = Mathf.Clamp(currentInsanity, 0f, 100f);
         UpdateSliderUI();
@@ -96,39 +148,9 @@ public class InsanityBar : MonoBehaviour
             insanitySlider.value = currentInsanity;
     }
 
-    private void CheckDepletion()
-    {
-        if (currentInsanity <= 0f && !isDepleted)
-        {
-            isDepleted = true;
-            OnInsanityDepleted();
-        }
-    }
 
-    private void OnInsanityDepleted()
-    {
-        Debug.Log("InsanityBar: Depleted!");
 
-        if (checkpointPrompt != null)
-            checkpointPrompt.SetActive(true);
-        else
-            Debug.LogWarning("InsanityBar: checkpointPrompt is NOT assigned in the Inspector!");
 
-        // Teleport player to last checkpoint
-        if (hasCheckpoint && player != null)
-        {
-            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-            if (rb != null) rb.linearVelocity = Vector2.zero;
-            player.position = lastCheckpointPosition;
-            Debug.Log("InsanityBar: Player respawned at " + lastCheckpointPosition);
-        }
-        else
-        {
-            Debug.LogWarning("InsanityBar: No checkpoint registered yet or player not assigned!");
-        }
-
-        ResetInsanity();
-    }
 
     // -- Public utility -------------------------------------------------------
 

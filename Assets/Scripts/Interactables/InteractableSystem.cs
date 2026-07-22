@@ -125,9 +125,9 @@ public class InteractableSystem : MonoBehaviour
 
 void OnDisable()
 {
-    Debug.LogError(
-        "DISABLED BY: " +
-        (transform.root ? transform.root.name : "NO ROOT")
-    );
+    // Debug.LogError(
+    //     "DISABLED BY: " +
+    //     (transform.root ? transform.root.name : "NO ROOT")
+    // );
 }
 }

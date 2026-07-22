@@ -37,6 +37,13 @@ public class InsanityVisionEffect : MonoBehaviour
     [Tooltip("Analog threshold for L2 to count as 'held'")]
     [Range(0f, 1f)] public float triggerThreshold = 0.1f;
 
+    [Header("Forced Shift")]
+    [Tooltip("Driven by RealityTimer. When true, the dark vision is forced ON and manual toggling is locked out.")]
+    public bool forcedShift = false;
+
+    /// <summary>True while the player is voluntarily holding Shift and NOT being forced. Used to drain sanity faster.</summary>
+    public bool ManualShiftActive { get; private set; }
+
     // -- Private state --------------------------------------------------------
 
     private ColorAdjustments colorAdjustments;
@@ -87,16 +94,20 @@ private float currentBlend = 0f;
         SetObjectArray(hideOnShift, true);
     }
 
-    private void Update()
+private void Update()
     {
         Gamepad pad = Gamepad.current;
 
-        bool shiftHeld = Input.GetKey(KeyCode.LeftShift)
+        bool manualInput = Input.GetKey(KeyCode.LeftShift)
             || Input.GetKey(KeyCode.RightShift)
             || (pad != null && pad.rightTrigger.ReadValue() > triggerThreshold);
 
+        // Manual shifting only counts (and is only allowed) when a forced shift is not active.
+        ManualShiftActive = manualInput && !forcedShift;
+
+        bool shiftHeld = forcedShift || ManualShiftActive;
+
         float targetBlend = shiftHeld ? 1f : 0f;
-        
         currentBlend = Mathf.MoveTowards(currentBlend, targetBlend, Time.deltaTime * transitionSpeed);
 
         if (postProcessReady)
@@ -108,10 +119,6 @@ private float currentBlend = 0f;
             lastShiftState = shiftActive;
             SetObjectArray(revealOnShift, shiftActive);
             SetObjectArray(hideOnShift, !shiftActive);
-
-            Debug.Log("InsanityVisionEffect: Shift active = " + shiftActive
-                + " | Revealing " + (revealOnShift?.Length ?? 0) + " objects"
-                + " | Hiding " + (hideOnShift?.Length ?? 0) + " objects");
         }
     }
 

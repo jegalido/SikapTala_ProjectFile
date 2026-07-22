@@ -54,7 +54,7 @@ public class DeathZone : MonoBehaviour
 
     // -- Respawn logic --------------------------------------------------------
 
-    private void RespawnPlayer()
+private void RespawnPlayer()
     {
         if (insanityBar == null)
         {
@@ -63,23 +63,17 @@ public class DeathZone : MonoBehaviour
             return;
         }
 
-        // Get the last registered checkpoint position from InsanityBar
         Vector3 respawnPos = insanityBar.GetLastCheckpointPosition();
 
-        // Teleport player
         if (playerTransform != null)
         {
-            // Stop all velocity first so player doesn't fly away
             if (playerRb != null)
                 playerRb.linearVelocity = Vector2.zero;
 
             playerTransform.position = respawnPos;
-            Debug.Log("DeathZone: Player respawned at " + respawnPos);
         }
 
-        // Reset insanity bar to 100%
-        insanityBar.ResetInsanity();
-
+        // Sanity persists across a fall (it is pressure, not a life). No reset here.
         isRespawning = false;
     }
 
