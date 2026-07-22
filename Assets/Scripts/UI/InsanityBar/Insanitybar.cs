@@ -78,7 +78,7 @@ private void Start()
                 fillOutline.effectDistance = new Vector2(5f, 5f);
                 Color c = shiftGlowColor; c.a = 0f; fillOutline.effectColor = c;
             }
-            barRect = insanitySlider.transform as RectTransform;
+            barRect = insanitySlider.fillRect; // scale/glow only the fill, not the whole bar (text)
             if (barRect != null) barBaseScale = barRect.localScale;
         }
     }

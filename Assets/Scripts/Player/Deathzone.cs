@@ -64,15 +64,7 @@ private void RespawnPlayer()
         }
 
         Vector3 respawnPos = insanityBar.GetLastCheckpointPosition();
-
-        if (playerTransform != null)
-        {
-            if (playerRb != null)
-                playerRb.linearVelocity = Vector2.zero;
-
-            playerTransform.position = respawnPos;
-        }
-
+        ScreenFader.Respawn(playerTransform, respawnPos);
         // Sanity persists across a fall (it is pressure, not a life). No reset here.
         isRespawning = false;
     }

@@ -33,6 +33,12 @@ public class InsanityVisionEffect : MonoBehaviour
     [Tooltip("GameObjects that are VISIBLE normally and become HIDDEN when Shift is held")]
     public GameObject[] hideOnShift;
 
+    [Header("Object Visibility On Shift - GROUPS (toggles ALL children)")]
+    [Tooltip("Drag a parent here; ALL its children are HIDDEN normally and REVEALED when shifted.")]
+    public GameObject[] revealOnShiftGroups;
+    [Tooltip("Drag a parent here; ALL its children are VISIBLE normally and HIDDEN when shifted.")]
+    public GameObject[] hideOnShiftGroups;
+
     [Header("Gamepad")]
     [Tooltip("Analog threshold for L2 to count as 'held'")]
     [Range(0f, 1f)] public float triggerThreshold = 0.1f;
@@ -92,6 +98,8 @@ private float currentBlend = 0f;
 
         SetObjectArray(revealOnShift, false);
         SetObjectArray(hideOnShift, true);
+        SetGroupArray(revealOnShiftGroups, false);
+        SetGroupArray(hideOnShiftGroups, true);
     }
 
 private void Update()
@@ -119,6 +127,8 @@ private void Update()
             lastShiftState = shiftActive;
             SetObjectArray(revealOnShift, shiftActive);
             SetObjectArray(hideOnShift, !shiftActive);
+            SetGroupArray(revealOnShiftGroups, shiftActive);
+            SetGroupArray(hideOnShiftGroups, !shiftActive);
         }
     }
 
@@ -156,6 +166,19 @@ private void Update()
                 obj.SetActive(visible);
         }
     }
+
+private void SetGroupArray(GameObject[] groups, bool visible)
+    {
+        if (groups == null) return;
+        foreach (GameObject g in groups)
+        {
+            if (g == null) continue;
+            Transform t = g.transform;
+            for (int i = 0; i < t.childCount; i++)
+                t.GetChild(i).gameObject.SetActive(visible);
+        }
+    }
+
 
     private void OnValidate()
     {
