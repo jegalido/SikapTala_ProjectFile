@@ -34,6 +34,10 @@ public class RealityGlitchHint : MonoBehaviour
     [Tooltip("Fade out while the player is shifting reality (blend 0 -> 1).")]
     [SerializeField] private bool fadeOutWhenShifted = true;
 
+    [Header("Insanity Vision Link")]
+    [Tooltip("Reference to the InsanityVisionEffect in the scene, used to fade this hint out while shifting.")]
+    [SerializeField] private InsanityVisionEffect insanityVisionEffect;
+
     private bool visiblePhase;
     private float phaseTimer;
     private float envelope;
@@ -81,7 +85,9 @@ public class RealityGlitchHint : MonoBehaviour
 
         float t = Time.realtimeSinceStartup;
         float flicker = Mathf.Lerp(minFlicker, 1f, 0.5f + 0.5f * Mathf.Sin((t + seed) * flickerSpeed));
-        float shiftFade = fadeOutWhenShifted ? (1f - Mathf.Clamp01(InsanityVisionEffect.ShiftBlend)) : 1f;
+        float shiftFade = (fadeOutWhenShifted && insanityVisionEffect != null)
+    ? (1f - Mathf.Clamp01(insanityVisionEffect.ShiftBlend))
+    : 1f;
         float alpha = baseAlpha * flicker * envelope * shiftFade;
 
         Apply(alpha, envelope);
