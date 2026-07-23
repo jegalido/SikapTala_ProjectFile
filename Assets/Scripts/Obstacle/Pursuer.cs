@@ -157,16 +157,17 @@ private void Update()
         if (Mathf.Abs(nx - targetX) < 0.05f) patrolDir = -patrolDir;
     }
 
-    private void FaceMoveDir(float dx)
+private void FaceMoveDir(float dx)
     {
         if (Mathf.Abs(dx) < 0.0001f) return;
         bool right = dx > 0f;
         if (right != facingRight)
         {
             facingRight = right;
-            Vector3 s = transform.localScale;
-            s.x = Mathf.Abs(s.x) * (right ? 1f : -1f);
-            transform.localScale = s;
+            // Flip the sprite only (not the transform), so child objects like the
+            // chatbox are never mirrored.
+            if (visuals != null)
+                foreach (SpriteRenderer v in visuals) if (v != null) v.flipX = !right;
         }
     }
 

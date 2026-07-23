@@ -55,16 +55,23 @@ public class SlideshowController : MonoBehaviour
         PauseAllVideos();
     }
 
-    private void Update()
+private void Update()
     {
+        Keyboard kb = Keyboard.current;
+        if (kb != null)
+        {
+            if (kb.rightArrowKey.wasPressedThisFrame || kb.dKey.wasPressedThisFrame) NextSlide();
+            if (kb.leftArrowKey.wasPressedThisFrame || kb.aKey.wasPressedThisFrame) PreviousSlide();
+        }
+
         Gamepad pad = Gamepad.current;
-        if (pad == null) return;
-
-        if (pad.dpad.right.wasPressedThisFrame || pad.rightShoulder.wasPressedThisFrame)
-            NextSlide();
-
-        if (pad.dpad.left.wasPressedThisFrame || pad.leftShoulder.wasPressedThisFrame)
-            PreviousSlide();
+        if (pad != null)
+        {
+            if (pad.dpad.right.wasPressedThisFrame || pad.rightShoulder.wasPressedThisFrame)
+                NextSlide();
+            if (pad.dpad.left.wasPressedThisFrame || pad.leftShoulder.wasPressedThisFrame)
+                PreviousSlide();
+        }
     }
 
     public void NextSlide()

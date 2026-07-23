@@ -375,13 +375,20 @@ public void EnterTutorial()
         screenBlurMaterial.SetFloat(BlurSizeID, target);
     }
 
-    private void OnDisable()
+private void OnDisable()
     {
-        // Safety: never leave the game frozen if this object is disabled while paused.
+        // Safety: never leave the game frozen OR blurred if this is disabled while paused
+        // (e.g. stopping play mode from inside the pause menu).
         if (IsPaused)
         {
             IsPaused = false;
             Time.timeScale = 1f;
         }
+        if (screenBlurMaterial != null) screenBlurMaterial.SetFloat(BlurSizeID, 0f);
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (screenBlurMaterial != null) screenBlurMaterial.SetFloat(BlurSizeID, 0f);
     }
 }
