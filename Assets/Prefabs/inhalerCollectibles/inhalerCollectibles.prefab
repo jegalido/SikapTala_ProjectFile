@@ -152,4 +152,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   restorePercent: 25
+  itemToGive: {fileID: 0}
   insanityBar: {fileID: 0}

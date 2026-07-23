@@ -42,14 +42,19 @@ public class ScreenFader : MonoBehaviour
     }
 
     /// <summary>Fade out, teleport the player to <paramref name="to"/> at full black, fade in.</summary>
-    public static void Respawn(Transform player, Vector3 to)
+public static void Respawn(Transform player, Vector3 to)
     {
         Action teleport = () =>
         {
-            if (player == null) return;
-            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-            if (rb != null) rb.linearVelocity = Vector2.zero;
-            player.position = to;
+            if (player != null)
+            {
+                Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+                if (rb != null) rb.linearVelocity = Vector2.zero;
+                player.position = to;
+            }
+            // Dying restores sanity to full.
+            InsanityBar bar = FindFirstObjectByType<InsanityBar>();
+            if (bar != null) bar.RestoreInsanity(100f);
         };
         if (Instance != null) Instance.PlayDeathRespawn(teleport);
         else teleport();

@@ -11,6 +11,9 @@ public class InsanityCollectible : MonoBehaviour
     [Tooltip("Percentage (0-100) of insanity bar to restore on pickup")]
     public float restorePercent = 25f;
 
+    [Tooltip("Item added to the inventory when picked up (e.g. the Inhaler). If set, the item is stored instead of used immediately.")]
+    public ItemData itemToGive;
+
     [Tooltip("Leave empty to auto-find InsanityBar in scene")]
     public InsanityBar insanityBar;
 
@@ -39,12 +42,20 @@ public class InsanityCollectible : MonoBehaviour
 
     // -- Collect / Reset ------------------------------------------------------
 
-    private void Collect()
+private void Collect()
     {
         isCollected = true;
 
-        if (insanityBar != null)
+        if (itemToGive != null && InventorySystem.Instance != null)
+        {
+            // Store it in the inventory (stackable) - the player uses it at will.
+            InventorySystem.Instance.AddItem(itemToGive, 1);
+        }
+        else if (insanityBar != null)
+        {
+            // Fallback: old behavior if no item is assigned.
             insanityBar.RestoreInsanity(restorePercent);
+        }
 
         // Hide instead of destroy so it can come back on reset
         gameObject.SetActive(false);

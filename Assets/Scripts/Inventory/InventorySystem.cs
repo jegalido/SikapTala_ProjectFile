@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InventorySystem : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class InventorySystem : MonoBehaviour
     //test
     public Action OnInventoryChanged;
     public Action<int> OnHotbarSelectionChanged;
+    public Action<ItemData> OnItemUsed;
 
     void Awake()
     {
@@ -39,20 +41,59 @@ public class InventorySystem : MonoBehaviour
             backpackSlots.Add(new InventorySlot());
     }
 
-    void Update()
+void Update()
     {
+        if (PauseManager.IsPaused) return;
         HandleHotbarInput();
+        HandleUseInput();
     }
 
-    void HandleHotbarInput()
+void HandleHotbarInput()
     {
         for (int i = 0; i < hotbarSlots.Count; i++)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
-            {
                 SelectHotbarSlot(i);
-            }
         }
+
+        Gamepad pad = Gamepad.current;
+        if (pad != null)
+        {
+            if (pad.rightShoulder.wasPressedThisFrame)
+                SelectHotbarSlot((selectedHotbarIndex + 1) % hotbarSlots.Count);
+            if (pad.leftShoulder.wasPressedThisFrame)
+                SelectHotbarSlot((selectedHotbarIndex - 1 + hotbarSlots.Count) % hotbarSlots.Count);
+        }
+    }
+
+    void HandleUseInput()
+    {
+        bool use = Input.GetKeyDown(KeyCode.Q);
+        Gamepad pad = Gamepad.current;
+        if (pad != null && pad.buttonNorth.wasPressedThisFrame) use = true; // Triangle / Y
+        if (use) UseSelectedItem();
+    }
+
+    public void UseSelectedItem()
+    {
+        if (selectedHotbarIndex < 0 || selectedHotbarIndex >= hotbarSlots.Count) return;
+        InventorySlot slot = hotbarSlots[selectedHotbarIndex];
+        if (slot.IsEmpty) return;
+
+        ItemData item = slot.item;
+        if (!item.consumable) return;
+
+        if (item.sanityRestore > 0f)
+        {
+            InsanityBar bar = FindFirstObjectByType<InsanityBar>();
+            if (bar != null) bar.RestoreInsanity(item.sanityRestore);
+        }
+
+        slot.amount--;
+        if (slot.amount <= 0) slot.Clear();
+
+        OnItemUsed?.Invoke(item);
+        OnInventoryChanged?.Invoke();
     }
 
     public void SelectHotbarSlot(int index)
