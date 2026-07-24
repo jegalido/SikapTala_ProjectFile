@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 324053580}
   - component: {fileID: 324053579}
   - component: {fileID: 324053581}
+  - component: {fileID: 324053582}
   m_Layer: 0
   m_Name: Timelinez
   m_TagString: Untagged
@@ -334,6 +335,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LoadMenuOnTimelineEnd
   director: {fileID: 324053579}
   sceneToLoad: MainMenu
+--- !u!114 &324053582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324053578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efb574c186bc713408268ec0404e80f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoldToSkip
+  director: {fileID: 324053579}
+  holdDuration: 1
+  overrideScene: 
+  showHint: 1
+  hintText: hold  SPACE / Y  to skip
 --- !u!1 &363856015
 GameObject:
   m_ObjectHideFlags: 0

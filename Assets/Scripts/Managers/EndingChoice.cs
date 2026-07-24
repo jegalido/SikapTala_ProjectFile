@@ -46,6 +46,7 @@ public class EndingChoice : MonoBehaviour
     [SerializeField] private string glitchChars = "#%&@?/\\*<>_";
 
     private bool shown;
+    private bool choiceReady;
     private string current = "";
     private Vector2 textBasePos;
     private float phraseTimer;
@@ -82,6 +83,7 @@ public class EndingChoice : MonoBehaviour
             choiceGroup.interactable = true;
             choiceGroup.blocksRaycasts = true;
         }
+        choiceReady = true;
         if (EventSystem.current != null && stayButton != null)
             EventSystem.current.SetSelectedGameObject(stayButton.gameObject);
     }
@@ -101,6 +103,11 @@ public class EndingChoice : MonoBehaviour
 
     private void Update()
     {
+        // Keep a button selected so a controller always has a target (mouse clicks can clear selection).
+        if (choiceReady && EventSystem.current != null
+            && EventSystem.current.currentSelectedGameObject == null && stayButton != null)
+            EventSystem.current.SetSelectedGameObject(stayButton.gameObject);
+
         if (!shown || glitchText == null) return;
 
         phraseTimer += Time.unscaledDeltaTime;

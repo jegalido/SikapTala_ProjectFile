@@ -731,6 +731,7 @@ GameObject:
   - component: {fileID: 734374464}
   - component: {fileID: 734374465}
   - component: {fileID: 734374466}
+  - component: {fileID: 734374467}
   m_Layer: 0
   m_Name: Timeline
   m_TagString: Untagged
@@ -839,6 +840,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b464ef59ff3f1be4eb4a36dce8335a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkipSceneOnStart
+--- !u!114 &734374467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734374461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efb574c186bc713408268ec0404e80f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoldToSkip
+  director: {fileID: 734374462}
+  holdDuration: 1
+  overrideScene: 
+  showHint: 1
+  hintText: hold  SPACE / Y  to skip
 --- !u!1 &931197870
 GameObject:
   m_ObjectHideFlags: 0
