@@ -49,7 +49,7 @@ public class InsanityBar : MonoBehaviour
 
     // -- Unity lifecycle ------------------------------------------------------
 
-private void Start()
+    private void Start()
     {
         currentInsanity = 100f;
         isDepleted = false;
@@ -83,7 +83,7 @@ private void Start()
         }
     }
 
-private void Update()
+    private void Update()
     {
         // Sanity is now persistent pressure - it drains but never triggers a respawn.
         DrainInsanity();
@@ -114,7 +114,7 @@ private void Update()
 
     // -- Drain logic ----------------------------------------------------------
 
-private void DrainInsanity()
+    private void DrainInsanity()
     {
         float drainPerSecond = 100f / (drainDurationInMinutes * 60f);
         float mult = (visionEffect != null && visionEffect.ManualShiftActive) ? manualShiftDrainMultiplier : 1f;
@@ -133,10 +133,24 @@ private void DrainInsanity()
 
     // -- Restore logic --------------------------------------------------------
 
-public void RestoreInsanity(float percent)
+    /// <summary>
+    /// Adds the given percentage to the current sanity (clamped at 100).
+    /// Use this for a PARTIAL top-up.
+    /// </summary>
+    public void RestoreInsanity(float percent)
     {
         currentInsanity += Mathf.Clamp(percent, 0f, 100f);
         currentInsanity = Mathf.Clamp(currentInsanity, 0f, 100f);
+        UpdateSliderUI();
+    }
+
+    /// <summary>
+    /// Instantly fills the sanity bar to 100%, regardless of current value.
+    /// Use this when a collectible should fully restore sanity.
+    /// </summary>
+    public void RestoreInsanityFull()
+    {
+        currentInsanity = 100f;
         UpdateSliderUI();
     }
 

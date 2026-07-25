@@ -10,6 +10,7 @@ using UnityEngine;
 /// - Optional line-of-sight (won't see you through walls).
 /// - Leash: after losing you it hunts your last-seen spot, then returns home.
 /// - Catch: touching you sends you to the last checkpoint (sanity kept).
+/// - Reset: on player death (from ANY cause), it snaps back to its start position/state.
 /// </summary>
 public class Pursuer : MonoBehaviour
 {
@@ -49,6 +50,13 @@ public class Pursuer : MonoBehaviour
     public InsanityVisionEffect vision;
     public InsanityBar insanityBar;
 
+    /// <summary>
+    /// Fire this from ANYWHERE the player dies/respawns (fall, hazard, trap, pursuer catch, etc.)
+    /// and every Pursuer in the scene will snap back to its start position and state.
+    /// Example: Pursuer.OnPlayerDied?.Invoke();
+    /// </summary>
+    public static event System.Action OnPlayerDied;
+
     private enum State { Idle, Patrol, Chase, Hunt, Return }
     private State state = State.Idle;
     private Vector3 origin;
@@ -73,7 +81,17 @@ public class Pursuer : MonoBehaviour
         state = isPatrolling ? State.Patrol : State.Idle;
     }
 
-private void Update()
+    private void OnEnable()
+    {
+        OnPlayerDied += ResetToStart;
+    }
+
+    private void OnDisable()
+    {
+        OnPlayerDied -= ResetToStart;
+    }
+
+    private void Update()
     {
         if (ScreenFader.Instance != null && ScreenFader.Instance.IsTransitioning) return;
 
@@ -157,7 +175,7 @@ private void Update()
         if (Mathf.Abs(nx - targetX) < 0.05f) patrolDir = -patrolDir;
     }
 
-private void FaceMoveDir(float dx)
+    private void FaceMoveDir(float dx)
     {
         if (Mathf.Abs(dx) < 0.0001f) return;
         bool right = dx > 0f;
@@ -171,22 +189,38 @@ private void FaceMoveDir(float dx)
         }
     }
 
-private void Catch()
+    private void Catch()
     {
         if (player == null) return;
         Vector3 target = insanityBar != null ? insanityBar.GetLastCheckpointPosition() : player.position;
         ScreenFader.Respawn(player, target);
-        // No snap-home: the leash (Return state) brings it back after it loses you.
+        // Broadcast the death so every pursuer (including this one) resets home.
+        OnPlayerDied?.Invoke();
     }
 
-private void SetDormant(bool value)
+    /// <summary>
+    /// Snaps this pursuer straight back to its start position and start state.
+    /// Called automatically whenever OnPlayerDied fires (see OnEnable/OnDisable).
+    /// You can also call this directly on a specific pursuer if you ever need to.
+    /// </summary>
+    public void ResetToStart()
+    {
+        transform.position = origin;
+        lastKnownPos = origin;
+        loseTimer = 0f;
+        patrolDir = 1;
+        state = isPatrolling ? State.Patrol : State.Idle;
+    }
+
+    private void SetDormant(bool value)
     {
         if (value == dormant) return;
         dormant = value;
         if (visuals != null)
             foreach (SpriteRenderer v in visuals) if (v != null) v.enabled = !value;
         // Keeps its position and state while dormant, so it resumes from where it was
-        // when reality returns. It only heads home via the Return state (after losing you).
+        // when reality returns. It only heads home via the Return state (after losing you),
+        // or instantly via ResetToStart() when the player dies.
     }
 
     private void OnDrawGizmosSelected()
